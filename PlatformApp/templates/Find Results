@@ -1,0 +1,21 @@
+Searching 19 files for "forgot_password"
+
+/Users/Archie/terminal/VotingApp/VotingChallengeApp/VotingApp/templates/index.html:
+   56                  <p class="forgot"><a href="{{ url_for('logout')}}">Forgot Password?</a></p>
+   57              {% else %}
+   58:                 <p class="forgot"><a href="{{ url_for_security('forgot_password')}}">Forgot Password?</a></p>
+   59              {% endif %}
+   60  
+
+/Users/Archie/terminal/VotingApp/VotingChallengeApp/VotingApp/templates/security/forgot_password.html:
+   31            <div id="{{login}}">
+   32  
+   33:             <form action="{{ url_for_security('forgot_password') }}" method="POST" name="forgot_password_form">
+   34:                 {{ forgot_password_form.hidden_tag() }}
+   35                <div class="field-wrap">
+   36  
+   37:                 {{ render_field_with_errors(forgot_password_form.email)}}
+   38  
+   39                <!-- <input type="email"required autocomplete="off"/> -->
+
+5 matches across 2 files

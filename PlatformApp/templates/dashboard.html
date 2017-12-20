@@ -1,0 +1,673 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{firstName}} {{lastName}}'s USIT Dashboard</title>
+    <link rel="icon" href="http://static1.squarespace.com/static/55329952e4b07fb5e0470317/t/59b5bebb8419c20a25da60fc/1505087726265/?format=1500w">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/normalize.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src='../static/js/Chart.min.js'></script>
+
+    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  </head>
+
+  <div id="content">
+  <body class="page-container">
+
+    <div class="header-banner">
+      <div class="usit-branding">USIT</div>
+      <div class="dropdown">
+        <a href="#dropdown" role="button" data-toggle="dropdown" class="user-name">{{firstName}} {{lastName}} <i class="fa fa-angle-down"></i></a>
+        <!-- <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{firstName}} {{lastName}}</button> -->
+        <ul class="dropdown-menu pull-right">
+          <li><a class="dropdown-item" href="{{url_for('logout')}}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="attendance">
+
+    {% if showAttendance %}
+
+      <section class="positions-container">
+
+        <div class="stats-title">
+          <h1>Attendance</h1>
+        </div>
+
+        <div class="upload-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          {% if allowedIn %}
+            <div class="attendance-result">
+              <p>Thanks for checking in! Please show your phone to a USIT representative before heading inside.</p>
+              <a href="{{url_for('dashboard')}}" class="dashboard-link">Return to Dashboard</a>
+            </div>
+          {% endif %}
+
+          {% if not allowedIn %}
+            <div class="attendance-result">
+              <p>Sorry, but you have already used up your two free meetings. Please pay USIT dues online at texasusit.org!</p>
+              <a href="{{url_for('dashboard')}}" class="dashboard-link">Return to Dashboard</a>
+            </div>
+          {% endif %}
+
+          {% if allowedIn or not allowedIn %}
+            <div class="attendance-stats">
+              <p class="attendance-stat">Name: {{firstName}} {{lastName}} </p>
+              <p class="attendance-stat">General Meetings Attended: {{attendance}}</p>
+              <p class="attendance-stat">Dues Paid: ${{dues}}</p>
+              <p class="attendance-stat">Today's Date: {{date}}</p>
+            </div>
+          {% endif %}
+        </div>
+
+      </section>
+
+    {% endif %}
+
+    </div>
+
+    {% if not showAttendance %}
+
+    <div class="sign-in-button-container">
+      <a href="/signin" role="button" class="sign-in-button">Sign In to General Meeting</a>
+    </div>
+
+    {% if isOfficer %}
+      <div class="page-header">Officer Tools</div>
+      <div class="sign-in-button-container">
+        <a data-toggle="collapse" role="button" data-target="#rankings" class="sign-in-button">View Rankings</a>
+      </div>
+    {% endif %}
+
+    {% if isAdmin %}
+      <div class="page-header">Administrator Tools</div>
+      <div class="sign-in-button-container" style="padding-top: 15px; margin-bottom: -30px;">
+        <a data-toggle="collapse" role="button" data-target="#rankings" class="sign-in-button">View Rankings</a>
+        <a data-toggle="collapse" role="button" data-target="#addstock" class="sign-in-button">Add a Stock</a>
+        <a data-toggle="collapse" role="button" data-target="#createvote" class="sign-in-button">Create a Vote<sup>BETA</sup></a>
+        {% if displayVotes %}
+          <a data-toggle="collapse" role="button" data-target="#voteresults" class="sign-in-button">Vote Results<sup>BETA</sup></a>
+        {% endif %}
+        <a data-toggle="collapse" role="button" data-target="#rolemanager" class="sign-in-button">Manage User Roles</a>
+      </div>
+    {% endif %}
+
+    <div class="page-header">Voting Challenge Dashboard</div>
+
+    <div id="voteresults" class="collapse">
+
+    {% if isAdmin and displayVotes %}
+
+      <section class="positions-container">
+
+        <div class="stats-title">
+          <h1>Results for {{outstandingTicker}}</h1>
+        </div>
+
+        <div class="upload-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <canvas id="chart" width="600" height="400" style="max-width: 600px; padding: 15px;"></canvas>
+          <script>
+            var ctx = document.getElementById("chart").getContext('2d');
+            var myChart = new Chart(ctx, {
+              type: 'pie',
+              data: {
+                labels: ['{{labels[0]}}', '{{labels[1]}}', '{{labels[2]}}'],
+                datasets: [{
+                  backgroundColor: ['{{colors[0]}}', '{{colors[1]}}', '{{colors[2]}}'],
+                  data: ['{{values[0]}}', '{{values[1]}}', '{{values[2]}}']
+                }]
+              }
+            });
+          </script>
+          {% if closeVotingButton %}
+            <form action = "closevoting" method = "POST" 
+               enctype = "multipart/form-data" style="padding-bottom: 14px;">
+              <div style="display:flex; justify-content:center">
+                <input type = "submit" style="margin-bottom:10px;" value="Close Votes">
+              </div>
+            </form>
+          {% endif %}
+        </div>
+
+      </section>
+
+    {% endif %}
+
+    </div>
+
+        <!-- ADD A STOCK -->
+
+    <div id="changename">
+
+    {% if needNames %}
+
+      <section class="positions-container">
+
+        <div class="stats-title">
+          <h1>Name</h1>
+        </div>
+
+        <div class="upload-container">
+          <form action = "name" method = "POST" 
+             enctype = "multipart/form-data">
+             <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              First Name<input type="text" name="firstName" style="margin-left:20px"/>
+             </div>
+             <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Last Name<input type="text" name="lastName" class="upload-text-field" style="margin-left: 20px"/><br>
+            </div>
+            <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Email<input type="text" name="email" value="{{email}}" class="upload-text-field" style="margin-left: 20px"/><br>
+            </div>
+            <div style="display:flex; justify-content:center">
+              <input type = "submit" style="margin-top: -5px; margin-bottom:10px;">
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+    {% endif %}
+
+
+    </div>
+
+    <div id="rankings" class="collapse">
+
+    <!-- Total Returns -->
+    {% if rankings %}
+      <section class="positions-container">
+
+        <div class="stats-title">
+          Rankings
+        </div>
+
+        <div class="stats-container">
+          <table style="width: 100%">
+            <tr class="admin-rankings-header">
+              <th class="admin-rankings-header-text">Rank</th>
+              <th class="admin-rankings-header-text">Email</th>
+              <th class="admin-rankings-score-header-text">Score</th>
+            </tr>
+            {% set count = 1 %}
+            {% for user in rankings %}
+              {% set scoreDisplay = user.score|round(2, 'common') %}
+              <tr class="admin-rankings-item">
+                <th class="admin-rankings-item-text">{{count}}</th>
+                <!-- <th class="admin-rankings-item-text">{{user.firstName}} {{user.lastName}}</th> -->
+                <th class="admin-rankings-item-text">{{user.email}}</th>
+                <th class="admin-rankings-score-item-text">{{scoreDisplay}}</th>
+              </tr> 
+              {% set count = count + 1 %}
+            {% endfor %}
+          </table>
+        </div>
+
+      </section>
+
+    {% endif %}
+
+    </div>
+
+    <!-- ADD A STOCK -->
+
+    <div id="addstock" class="collapse">
+
+    {% if isAdmin %}
+
+      <section class="positions-container">
+
+        <div class="stats-title">
+          <h1>New Stock</h1>
+        </div>
+
+        <div class="upload-container">
+          <form action = "uploader" method = "POST" 
+             enctype = "multipart/form-data">
+             <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Ticker<input type="text" name="ticker" style="margin-left:20px"/>
+             </div>
+             <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Price<input type="text" name="price" class="upload-text-field" style="margin-left: 20px"/><br>
+            </div>
+            <input type = "file" name = "file" style="text-align: center; margin: auto; width:200px;"/><br>
+            <div style="display:flex; justify-content:center">
+              <input type = "submit" style="margin-top: -5px; margin-bottom:10px;">
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+    {% endif %}
+
+    </div>
+
+    <!-- CREATE A VOTE -->
+
+    <div id="createvote" class="collapse">
+
+    {% if isAdmin %}
+
+      <section class="positions-container">
+
+        <div class="stats-title">
+          <h1>Create a Vote<sup>BETA</sup></h1>
+        </div>
+
+        <div class="upload-container">
+          <form action = "newvote" method = "POST" 
+             enctype = "multipart/form-data">
+             <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Ticker<input type="text" name="ticker" style="margin-left:20px"/>
+             </div>
+            <div style="display:flex; justify-content:center">
+              <input type = "submit" style="margin-top: -5px; margin-bottom:10px;">
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+    {% endif %}
+
+
+    </div>
+
+    <!-- GIVE ADMIN PERMISSION -->
+
+    <div id="rolemanager" class="collapse">
+
+    {% if isAdmin %}
+
+      <section class="positions-container">
+        <div class="stats-title">
+          <h1>Role Manager</h1>
+        </div>
+
+        <div class="upload-container">
+          <form action = "role" method = "POST">
+            <div style="padding:5px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Email <!-- <input type="text" name="email" style="margin-left: 20px"/> -->
+              <select name="email" style="margin-left: 10px;">
+                {% for student in emails %}
+                <option value="{{student}}">{{student}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div style="padding:5px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Role<!-- <input type="text" name="newrole" style="margin-left: 20px"/> -->
+              <select name="newrole" style="margin-left: 10px;">
+                <option value="Admin">Admin</option>
+                <option value="Member">Member</option>
+                <option value="Officer">Officer</option>
+                <option value="Delete User">Delete User</option>
+              </select>
+            </div>
+            <div style="display:flex; justify-content:center">
+              <input type="submit" style="margin-top: 5px; margin-bottom: 10px;">
+            </div>
+          </form>
+        </div>
+      </section>
+
+    {% endif %}
+
+    </div>
+
+    <!-- VOTE FOR STOCK -->
+
+    {% if outstandingVote %}
+
+      <section class="positions-container">
+
+        <div class="stats-title">
+          <h1>Vote on {{outstandingTicker}}</h1>
+        </div>
+
+        <div class="upload-container">
+          <form action = "vote" method = "POST" 
+             enctype = "multipart/form-data">
+            <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+              Email<input type="text" name="email" style="margin-left:20px" value={{email}}>
+           </div>
+            <div style="padding:5px; margin:auto; width: 50%; display:flex; justify-content: center; align-items: center">
+              Role<!-- <input type="text" name="newrole" style="margin-left: 20px"/> -->
+              <select name="votechoice" style="margin-left: 10px;">
+                <option value="Yes - Long">Yes - Long</option>
+                <option value="No - Short">No - Short</option>
+                <option value="No - No Position">No - No Position</option>
+              </select>
+            </div>
+            <div style="display:flex; justify-content:center">
+              <input type="submit" style="margin-top: 5px; margin-bottom: 10px;">
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+    {% endif %}
+
+
+    <!-- STATS -->
+
+    <section class="positions-container">
+
+      <div class="stats-title">
+        Overview
+      </div>
+
+      <div class="stats-container">
+        <div class="stats-box">
+          <div class="stats-header">Rank</div>
+          <div class="stats-text">{{standing}}</div>
+        </div>
+
+        {% set totalReturnDisplay = (totalReturn*100)|round(2, 'common') %}
+        {% set scoreDisplay = (score)|round(2, 'common') %}
+
+        <div class="stats-box">
+          <div class="stats-header">Return</div>
+          <div class="stats-text">{{totalReturnDisplay}}%</div>
+        </div>
+
+        <div class="stats-box">
+          <div class="stats-header">Score</div>
+          <div class="stats-text">{{scoreDisplay}}</div>
+        </div>
+      </div>
+      
+    </section>
+
+<!-- ACTIVE STOCKS -->
+    {% if numActiveStocks != 0 %}
+
+      <section class="positions-container"> <!--for demo wrap-->
+
+        <div class="positions-title">
+          <h1>Active Positions</h1>
+        </div>
+
+        <div class="boxes-container">
+
+          {% set exitCounter = 1 %}
+          {% for ticker in stocks %}
+          {% set gain = (prices[ticker.ticker]-ticker.startingPrice) %}
+
+
+          <div class="ticker-box">
+            <div class="ticker-symbol">
+              {% set id = ticker.ticker + "Modal" %}
+              {% set idLink = "#" + id %}
+
+              {{ticker.ticker}}
+              <!--
+              <a href={{idLink}} class="modal-link" id="modalLink" role="button" data-toggle="modal">{{ticker.ticker}}</a>
+
+              <div class="modal fade" id={{id}} role="dialog">
+                <div class="modal-dialog">
+
+                  <div classd="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">{{ticker.ticker}}</h4>
+                    </div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script id="graph" type="text/javascript">
+                      new TradingView.widget({
+                        "width": 570,
+                        "height": 373,
+                        "interval": "D",
+                        "symbol": '{{ticker.ticker}}',
+                        "timezone": "Etc/UTC",
+                        "theme": "White",
+                        "style": "1",
+                        "locale": "en",
+                        "toolbar_bg": "#f1f3f6",
+                        "enable_publishing": false,
+                        "allow_symbol_change": true,
+                        "hideideas": true
+                      });
+                    </script>
+                    <div class="modal-body">
+                      <p class="stock-description">Description of stock.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              -->
+
+              {% set exitId = "exit" + ticker.ticker + "Modal" %}
+              {% set exitIdLink = "#" + exitId %}
+
+              <a href={{exitIdLink}} role="button" data-toggle="modal" class="ticker-exit-icon">
+                <i class="fa fa-times" style="font-size: 20px;" title="Exit this Position"></i>
+              </a>
+
+              <div class="modal fade" id={{exitId}} role="dialog">
+                <div class="modal-dialog" style="background-color: white">
+
+                  <!-- Modal content-->
+                  <div classd="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title"> Sell {{ticker.ticker}}?</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p class="stock-description">Are you sure you wish to sell {{ticker.ticker}}?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <a href="{{url_for('exitPosition', exitIndex=exitCounter)}}" >
+                        <button type="button" class="btn btn-default">Yes</button>
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <div class="ticker-name">{{names[ticker.ticker]}}</div>
+            <!-- Change these to not store the values -->
+            <div class="ticker-price">
+              {% if changes[ticker.ticker] < 0 %}
+                <i class="fa fa-arrow-down" style="font-size: 30px"></i>
+              {% endif %}
+              {% if changes[ticker.ticker] == 0 %}
+                <i class="fa fa-arrow-right" style="font-size: 30px"></i>
+              {% endif %}
+              {% if changes[ticker.ticker] > 0 %}
+                <i class="fa fa-arrow-up" style="font-size: 30px"></i>
+              {% endif %}
+              <span class="ticker-price">{{prices[ticker.ticker]}}</span>
+              <span class="ticker-currency">USD</span>
+            </div>
+            {% set todayChange = "%.2f" % changes[ticker.ticker] %}
+            {% set totalChange = "%.2f" % totalGains[ticker.ticker] %}
+            <table cellpadding="0" class="change-values">
+              <tr>
+                <td class="gain-description">Today</td>
+                {% if changes[ticker.ticker] < 0 %}
+                  <td class="gain-negative">{{todayChange}}</td>
+                  <td class="gain-negative">{{percentChanges[ticker.ticker]}}%</td>
+                {% endif %}
+                {% if changes[ticker.ticker] >= 0 %}
+                  <td class="gain-positive">{{todayChange}}</td>
+                  <td class="gain-positive">{{percentChanges[ticker.ticker]}}%</td>
+                {% endif %}
+              </tr>
+              <tr>
+                  <!-- TODO Need to edit this -->
+                <td class="gain-description">Total</td>
+                {% if totalPercents[ticker.ticker] < 0 %}
+                  <td class="gain-negative">{{totalChange}}</td>
+                  <td class="gain-negative">{{(totalPercents[ticker.ticker])}}%</td>
+                {% endif %}
+                {% if totalPercents[ticker.ticker] >= 0 %}
+                  <td class="gain-positive">{{totalChange}}</td>
+                  <td class="gain-positive">{{totalPercents[ticker.ticker]}}%</td>
+                {% endif %}
+              </tr>
+            </table>
+            <div class="date-time">{{dates[ticker.ticker]}}</div>
+          </div>
+
+          {% set exitCounter = exitCounter + 1 %}
+          {% endfor %}
+
+        </div>
+
+      </section>
+
+    {% endif %}
+
+<!-- EXITED STOCKS -->
+
+    {% if numExitedStocks != 0 %}
+      <section class="positions-container"> <!--for demo wrap-->
+
+        <div class="positions-title">
+          <h1>Past/Other Positions</h1>
+        </div>
+
+        <div class="boxes-container">
+
+          {% for ticker in exitedStocks %}
+          {% set gain = exitedGains[ticker.ticker] %}
+
+          <div class="ticker-box">
+            <div class="ticker-symbol">
+              {% set id = ticker.ticker + "Modal" %}
+              {% set idLink = "#" + id %}
+
+              {{ticker.ticker}}
+
+              <!--
+              <a href={{idLink}} role="button" data-toggle="modal">{{ticker.ticker}}</a>
+
+              <div class="modal fade" id={{id}} role="dialog">
+                <div class="modal-dialog">
+
+                  
+                  <div classd="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">{{ticker.ticker}}</h4>
+                    </div>
+                    
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script id="graph" type="text/javascript">
+                      new TradingView.widget({
+                        "width": 570,
+                        "height": 373,
+                        "interval": "D",
+                        "symbol": '{{ticker.ticker}}',
+                        "timezone": "Etc/UTC",
+                        "theme": "White",
+                        "style": "1",
+                        "locale": "en",
+                        "toolbar_bg": "#f1f3f6",
+                        "enable_publishing": false,
+                        "allow_symbol_change": true,
+                        "hideideas": true
+                      });
+                    </script>
+                    
+                    <div class="modal-body">
+                      <p class="stock-description">Description of stock.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              -->
+            </div>
+            <div class="ticker-name">{{exitedStocksNames[ticker.ticker]}}</div>
+            <div class="ticker-price">
+              {% if gain < 0 %}
+                <i class="fa fa-arrow-down" style="font-size: 30px"></i>
+              {% endif %}
+              {% if gain == 0 %}
+                <i class="fa fa-arrow-right" style="font-size: 30px"></i>
+              {% endif %}
+              {% if gain > 0 %}
+                <i class="fa fa-arrow-up" style="font-size: 30px"></i>
+              {% endif %}
+              <span class="ticker-price">{{ticker.end_price}}</span>
+              <span class="ticker-currency">USD</span>
+            </div>
+            {% set gainDisplay = "%.2f" % gain %}
+            <table cellpadding="0" class="change-values">
+              <tr>
+                {% if exitedGains[ticker.ticker] == 0 %}
+                  <td class="gain-description">Abstained</td>
+                {% elif (gain/(startingPrices[ticker.ticker])*100)|round(2,'common') < 0 %}
+                  <td class="gain-description">Total</td>
+                  <td class="gain-negative">{{gainDisplay}}</td>
+                  <td class="gain-negative">{{(gain/(startingPrices[ticker.ticker])*100)|round(2,'common')}}%</td>
+                {% elif (gain/(startingPrices[ticker.ticker])*100)|round(2,'common') > 0 %}
+                  <td class="gain-description">Total</td>
+                  <td class="gain-positive">{{gainDisplay}}</td>
+                  <td class="gain-positive">{{(gain/(startingPrices[ticker.ticker])*100)|round(2,'common')}}%</td>
+                {% endif %}
+              </tr>
+            </table>
+            <div class="sell-date">{{ticker.date}}</span>
+            </div>
+            {% set updateDateTime = exitedStockDates[ticker.ticker] %}
+            <div class="date-time">{{updateDateTime}}</div>
+          </div>
+
+          {% endfor %}
+
+        </div>
+
+      </section>
+    {% endif %}
+
+      <!-- #main-container -->
+
+      {% endif %}
+
+    <div class="footer-container">
+        <footer class="wrapper">
+            Copyright © 2016 University Securities Investment Team All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+    <script src="js/main.js"></script>
+  </body>
+
+  </div>
+  
+</html>

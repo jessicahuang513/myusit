@@ -1,0 +1,557 @@
+
+
+#headerTitle{
+    color: black;
+    font-size: 60px;
+    text-align: center;
+}
+
+.positionLabel{
+    color: black;
+    font-size: 25px;
+}
+
+.admin-rankings-header{
+  background-color: #F7CE3E;
+  color: #1A2930;
+  font-size: 22px;
+  text-transform: uppercase; 
+}
+
+.admin-rankings-item{
+  background-color: rgba(192, 192, 192, 0.5);
+  color: #1A2930;
+  font-size: 15px;
+}
+
+.admin-rankings-header-text{
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
+
+.admin-rankings-score-header-text{
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
+
+.admin-rankings-item-text{
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
+
+.admin-rankings-score-item-text{
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
+
+.footer-container{
+    height: 20px;
+    text-align: center;
+    color: white;
+    padding-bottom: 20px;
+}
+
+.page-container{
+  background-color: white;
+}
+
+.dropdown{
+  background-color: #F7CE3E;
+  margin-right: 20px;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.stock-graph{
+  width: 100%;
+  padding: 10px;
+}
+
+.positions-title{
+  color: white;
+  background-color: #294441;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.stats-title{
+  color: white;
+  background-color: #1A2930;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  font-size: 30px;
+  font-weight: 300;
+  text-align: center;
+}
+
+h1{
+  font-size: 30px;
+  font-weight: 300;
+  text-align: center;
+  margin: 0px;
+}
+
+h3{
+  font-size: 25px;
+  color: black;
+  font-weight: 300;
+  text-align: center;
+}
+
+h4{
+  font-size: 25px;
+}
+
+h2{
+  font-size: 45px;
+  color: black;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.tbl-header{
+  background-color: rgba(255,255,255,0.3);
+ }
+
+.tbl-content{
+  height:130px;
+  overflow-x:auto;
+  margin-top: 0px;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+#totalReturnTable{
+    height: 40px;
+}
+
+.ticker-box{
+  padding:0.33em;
+  border: 0px;
+  text-wrap: normal;
+  /*background-color: #546d78;*/
+  background-color: #455A64;
+  color:#E0E0E0;
+  max-width: 220px;
+  min-width: 220px;
+  flex-grow: 1;
+  margin: 20px 2% 20px 2%;
+  font-family: 'Open Sans', sans-serif;
+  transition: all 400ms ease-in-out;
+  border-radius: 2px;
+}
+
+.stats-box{
+  padding:0.33em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: 0px;
+  border: 0px;
+  text-wrap: normal;
+  background-color: #1A2930;
+  color: #E0E0E0;
+  width: 220px;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: 'Open Sans', sans-serif;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px;
+  transition: all 400ms ease-in-out;
+  border-radius: 5px;
+}
+
+.ticker-box:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px
+}
+
+.ticker-symbol{
+  font-size: 25px;
+  padding-bottom: 10px;
+  padding-left:10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.modal-title, .modal-body{
+  color: #2a3843;
+}
+
+.stock-description{
+  font-size: 15px;
+}
+
+.modal-dialog{
+  background-color: white;
+}
+
+.ticker-symbol a{
+  color: #E0E0E0;
+}
+
+.gain-description{
+  color: #DCE3E7;
+}
+
+.gain-positive{
+  color: #69F0AE;
+}
+
+.gain-negative{
+  color: #FF5252;
+}
+
+.ticker-price{
+  font-size: 30px;
+}
+
+.ticker-currency{
+  font-size: 20px;
+  color: #E0E0E0;
+}
+
+.ticker-name{
+  font-size: 17px;
+  padding-bottom: 5px;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.boxes-container{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.upload-container{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-header{
+  color: #1A2930;
+  font-size: 30px;
+  font-weight: 300;
+  border-bottom: 0px;
+  padding-left: 50px;
+  margin-bottom: -20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.stats-header{
+  text-align: center;
+  color: #F7CE3E;
+  font-size: 25px;
+  padding-bottom: 5px;
+}
+
+.stats-text{
+  text-align: center;
+  color: white;
+  font-size: 25px;
+}
+
+.positions-container{
+  padding: 0px;
+  margin-bottom: 40px;
+  background-color: rgba(192, 192, 192, 0.5);
+}
+
+.stats-container{
+  display: flex;
+  justify-content: space-around;
+  background-color: rgba(192, 192, 192, 0.5);
+}
+
+.form-text-field{
+  padding: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    .sign-in-button-container {
+      flex-direction: column;
+    }
+
+    .sign-in-button {
+      margin: 10px;
+      text-align: center;
+    }
+}
+
+@media screen and (max-width: 730px) {
+
+    .positions-container{
+      padding-bottom: 2px;
+    }
+
+    .stats-container {
+      display: inline;
+    }
+
+    .stats-box{
+      width: 75%;
+      padding: 0;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+/*    .modal-link{
+      pointer-events: none;
+      cursor: default;
+    }*/
+
+    #modalLink{
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .page-header{
+      text-align: center;
+      padding-left: 0px;
+    }
+}
+
+.header-banner{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background-color: #1A2930;
+  align-items: center;
+  height: 80px;
+  margin-bottom: 43px;
+}
+
+@media screen and (max-width: 320px) {
+  .header-banner{
+    justify-content: center;
+    height: 120px;
+  }
+
+  .usit-branding{
+    margin-right: 40px;
+  }
+
+  .dropdown{
+    margin-left:20px;
+  }
+
+  .admin-rankings-header{
+    font-size: 15px;
+  }
+
+
+}
+
+.attendance-result {
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 20px;
+  text-align: center;
+  align-items: center;
+  color: #1A2930;
+  font-size: 25px;
+}
+
+.attendance-stats {
+  text-align: center;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #1A2930;
+  font-size: 18px;
+  padding-bottom: 45px;
+}
+
+.attendance-stat {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.dashboard-link {
+  text-decoration: none;
+  color: #1A2930;
+}
+
+.dashboard-link:link, 
+.dashboard-link:visited, 
+.dashboard-link:hover, 
+.dashboard-link:active {
+  color: #1A2930;
+}
+
+.usit-branding{
+  font-size: 35px;
+  margin-left: 40px;
+  color: white;
+}
+
+.user-name{
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 25px;
+  font-size: 20px;
+  color: #1A2930;
+}
+
+.sign-in-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.sign-in-button{
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 20px;
+  color: #1A2930;
+  background-color: #F7CE3E;
+  border-radius: 5px;
+}
+
+.sign-in-button:link, 
+.sign-in-button:visited, 
+.sign-in-button:hover, 
+.sign-in-button:active {
+  text-decoration: none;
+}
+
+.sign-in-button:hover {
+  background-color: #1A2930;
+  color: #F7CE3E;
+}
+
+.user-name:hover,
+.user-name:active,
+.user-name:visited, 
+.user-name:link{
+  color: #1A2930;
+  text-decoration: none;
+}
+
+.dropdown-pull-right {
+  float: right !important;
+  right: 0;
+  left: auto;
+}
+
+.dropdown-pull-right > .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+.change-values { 
+  border: none;
+  background: #455A64;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ticker-exit-icon{
+  color: white;
+  margin-top: -10px;
+}
+
+.fa-times:hover {
+    color: grey;
+}
+
+.ticker-price{
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.fa-angle-down{
+  color: #1A2930;
+  padding-left: 10px;
+}
+
+.percent-gain{
+  font-size: 15px;
+  text-align: center;
+}
+
+.sell-date{
+  font-size: 13px;
+  padding-top: 10px;
+  text-align: center;
+}
+
+.date-time{
+  color: #E0E0E0;
+  font-size: 10px;
+  padding-top: 5px;
+}
+
+td{
+  text-align: center;
+  vertical-align:middle;
+  font-weight: 300;
+  font-size: 15px;
+  color: #fff;
+}
+
+.fa-angle-down:before{
+  padding-left: 10px;
+}
+
+/* demo styles */
+
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+body{
+  background-color: white;
+  font-family: 'Open Sans', sans-serif;
+}
+section{
+  margin: 50px;
+}
+
+
+/* follow me template */
+.made-with-love {
+  margin-top: 40px;
+  padding: 10px;
+  clear: left;
+  text-align: center;
+  font-size: 10px;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+}
+.made-with-love i {
+  font-style: normal;
+  color: #F50057;
+  font-size: 14px;
+  position: relative;
+  top: 2px;
+}
+.made-with-love a {
+  color: #fff;
+  text-decoration: none;
+}
+.made-with-love a:hover {
+  text-decoration: underline;
+}
+
+
+/* for custom scrollbar for webkit browser*/
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
