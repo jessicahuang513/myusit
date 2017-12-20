@@ -48,7 +48,7 @@
 
     <div id="attendance">
 
-    {% if showAttendance %}
+    {% if showAttendance and not showAnalystGroup %}
 
       <section class="positions-container">
 
@@ -85,12 +85,26 @@
 
     {% endif %}
 
+    {% if showAnalystGroup %}
+      <div class="page-header">Analyst Group Materials</div>
+    {% endif %}
+
+    {% if showFund %}
+      <div class="page-header">Fund Materials</div>
+    {% endif %}
+
     </div>
 
-    {% if not showAttendance %}
+    {% if not showAttendance and not showAnalystGroup and not showFund%}
 
     <div class="sign-in-button-container">
-      <a href="/signin" role="button" class="sign-in-button">Sign In to General Meeting</a>
+      <a href="/signin" role="button" class="sign-in-button">Sign In to GM</a>
+      {% if showAnalystGroupButton %}
+        <a href="/analystgroup" role="button" class="sign-in-button">Analyst Group</a>
+      {% endif %}
+      {% if showFundButton %}
+        <a href="/fund" role="button" class="sign-in-button">Fund</a>
+      {% endif %}
     </div>
 
     {% if isOfficer %}

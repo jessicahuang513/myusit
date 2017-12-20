@@ -57,6 +57,8 @@ class User(db.Model, UserMixin):
     ret = db.Column(db.Float)
     score = db.Column(db.Float)
     active = db.Column(db.Boolean)
+    analyst = db.Column(db.String)
+    fund = db.Column(db.String)
     stocks = db.relationship('Tickers', secondary=ticker_identifier, backref='user')
     transactions = db.relationship('Transactions', backref='user')
     #required for Flask-Security

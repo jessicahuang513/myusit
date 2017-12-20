@@ -13,7 +13,7 @@ manager = Manager(app)
 def initdb():
     db.create_all()
     admin = Role(name="Admin", description="Gets to look at all the rankings.")
-    db.session.add(User(firstName="Arnav", lastName="Jain",email="arnav_jain@utexas.edu", eid="aj24872", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0))
+    db.session.add(User(firstName="Arnav", lastName="Jain",email="arnav_jain@utexas.edu", eid="aj24872", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
     db.session.commit()
     refreshdb()
     print 'Initialized the database'

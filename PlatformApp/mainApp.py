@@ -36,7 +36,8 @@ else:
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 date = time.strftime("%m/%d/%Y")
-
+current_analysts = ['Srija Nalla']
+current_funds = ['TMT']
 
 # app = Flask(__name__)
 # app.config['SECRET_KEY'] = '~t\x86\xc9\x1ew\x8bOcX\x85O\xb6\xa2\x11kL\xd1\xce\x7f\x14<y\x9e'
@@ -206,7 +207,8 @@ def index():
                         dues = 0,
                         atLatestMeeting = False,
                         rowOnSheet = 0, 
-                        attendance = 0)
+                        attendance = 0,
+                        analyst = None)
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('index'))
@@ -360,6 +362,16 @@ def dashboard():
         outstandingTicker = ''
         closeVotingButton = False
 
+    if not(current_user.analyst is None) and current_user.analyst in current_analysts:
+        showAnalystGroupButton = True
+    else:
+        showAnalystGroupButton = False
+
+    if not(current_user.fund is None) and current_user.fund in current_funds:
+        showFundButton = True
+    else:
+        showFundButton = False
+
     if len(current_user.roles) > 0 and (current_user.roles[0].name == 'Officer' or current_user.roles[0].name=='Admin'):
         if current_user.roles[0].name == 'Admin':
             return render_template('dashboard.html', email = current_user.email, needNames = needNames, emails = emails, isOfficer = False, isAdmin=True, rankings = users_tups, stocks=current_user.stocks, prices=prices,
@@ -368,7 +380,8 @@ def dashboard():
                 numActiveStocks = len(current_user.stocks), firstName = current_user.firstName,
                 lastName = current_user.lastName, dates = dates, exitedStockDates = exitedStockDates,
                 changes = changes, percentChanges = percentChanges, totalGains = totalGains, totalPercents = totalPercents,
-                exitedGains = exitedGains, outstandingVote = hasNotVoted, outstandingTicker = outstandingTicker, values = values, labels = labels, colors = colors, displayVotes = displayVotes, closeVotingButton = closeVotingButton, showAttendance = False)
+                exitedGains = exitedGains, outstandingVote = hasNotVoted, outstandingTicker = outstandingTicker, values = values, labels = labels, colors = colors, displayVotes = displayVotes, closeVotingButton = closeVotingButton, showAttendance = False, showAnalystGroup = False,
+                showAnalystGroupButton = showAnalystGroupButton, showFund = False, showFundButton = showFundButton)
         else:
             return render_template('dashboard.html', email = current_user.email, needNames = needNames, emails = emails, isOfficer = True, isAdmin=False, rankings = users_tups, stocks=current_user.stocks, prices=prices,
                 names = names, score = current_user.score, totalReturn=current_user.ret, standing=standing, startingPrices=startingPrices,
@@ -376,7 +389,8 @@ def dashboard():
                 numActiveStocks = len(current_user.stocks), firstName = current_user.firstName,
                 lastName = current_user.lastName, dates = dates, exitedStockDates = exitedStockDates,
                 changes = changes, percentChanges = percentChanges, totalGains = totalGains, totalPercents = totalPercents,
-                exitedGains = exitedGains, outstandingVote = hasNotVoted, outstandingTicker = outstandingTicker, values = values, labels = labels, colors = colors, displayVotes = displayVotes, closeVotingButton = closeVotingButton, showAttendance = False)
+                exitedGains = exitedGains, outstandingVote = hasNotVoted, outstandingTicker = outstandingTicker, values = values, labels = labels, colors = colors, displayVotes = displayVotes, closeVotingButton = closeVotingButton, showAttendance = False, showAnalystGroup = False,
+                showAnalystGroupButton = showAnalystGroupButton, showFund = False, showFundButton = showFundButton)
     else:
         return render_template('dashboard.html', email = current_user.email, needNames = needNames, isOfficer=False, isAdmin=False, stocks=current_user.stocks, prices=prices,
             names = names, score = current_user.score, totalReturn=current_user.ret, standing=standing, startingPrices=startingPrices,
@@ -384,7 +398,8 @@ def dashboard():
             numActiveStocks = len(current_user.stocks), firstName = current_user.firstName,
             lastName = current_user.lastName, dates = dates, exitedStockDates = exitedStockDates,
             changes = changes, percentChanges = percentChanges, totalGains = totalGains, totalPercents = totalPercents,
-            exitedGains = exitedGains, outstandingVote = hasNotVoted, outstandingTicker = outstandingTicker, values = values, labels = labels, colors = colors, displayVotes = displayVotes, closeVotingButton = closeVotingButton, showAttendance = False)
+            exitedGains = exitedGains, outstandingVote = hasNotVoted, outstandingTicker = outstandingTicker, values = values, labels = labels, colors = colors, displayVotes = displayVotes, closeVotingButton = closeVotingButton, showAttendance = False, showAnalystGroup = False,
+            showAnalystGroupButton = showAnalystGroupButton, showFund = False, showFundButton = showFundButton)
 
 def get_json(ticker):
     url = "https://www.google.com/finance/info?q=NSE:{}".format(ticker)
@@ -630,9 +645,23 @@ def log_in():
         current_user.atLatestMeeting = True
         db.session.commit()
 
-        return render_template('dashboard.html', showAttendance = True, firstName = current_user.firstName, lastName = current_user.lastName, allowedIn = True, attendance = current_user.attendance, dues = current_user.dues, date = date)
+        return render_template('dashboard.html', showAttendance = True, showAnalystGroup = False, showFund = False, firstName = current_user.firstName, lastName = current_user.lastName, allowedIn = True, attendance = current_user.attendance, dues = current_user.dues, date = date)
     else:
-        return render_template('dashboard.html', showAttendance = True, firstName = current_user.firstName, lastName = current_user.lastName, allowedIn = False, attendance = current_user.attendance, dues = current_user.dues, date = date)
+        return render_template('dashboard.html', showAttendance = True, showAnalystGroup = False, showFund = False, firstName = current_user.firstName, lastName = current_user.lastName, allowedIn = False, attendance = current_user.attendance, dues = current_user.dues, date = date)
+
+@app.route('/analystgroup', methods=['GET', 'POST'])
+@login_required
+def analyst_group():
+    if not(current_user.analyst is None) and current_user.analyst in current_analysts:
+        return render_template('dashboard.html', showAnalystGroup = True, showAttendance = False, showFund = False, firstName = current_user.firstName, lastName = current_user.lastName)
+    return redirect(url_for('dashboard'))
+
+@app.route('/fund', methods=['GET', 'POST'])
+@login_required
+def fund():
+    if not(current_user.fund is None) and current_user.fund in current_funds:
+        return render_template('dashboard.html', showAnalystGroup = False, showAttendance = False, showFund = True, firstName = current_user.firstName, lastName = current_user.lastName)
+    return redirect(url_for('dashboard'))
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
