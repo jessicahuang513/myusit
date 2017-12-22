@@ -1,5 +1,5 @@
 from PlatformApp.mainApp import app, db, update_ret, add_stock, update_score, create_stock_info
-from PlatformApp.models import User, Tickers, Role, Transactions, Stock, Vote, RecentVote
+from PlatformApp.models import User, Tickers, Role, Transactions, Stock, Vote, RecentVote, AnalystFile, FundFile
 from flask_script import Manager, prompt_bool
 from openpyxl import load_workbook, Workbook
 import requests
@@ -14,6 +14,9 @@ def initdb():
     db.create_all()
     admin = Role(name="Admin", description="Gets to look at all the rankings.")
     db.session.add(User(firstName="Arnav", lastName="Jain",email="arnav_jain@utexas.edu", eid="aj24872", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
+    db.session.add(AnalystFile(name="WSM", filePath="https://drive.google.com/file/d/1szWz-2uHJQqWEbLJVL9RISAOfJ9k4Ja8/preview"))
+    db.session.add(AnalystFile(name="DCF", filePath="https://drive.google.com/file/d/170_Gg0-e9hXgB5UMJApjsI0Y96_r4nMg/preview"))
+    db.session.add(AnalystFile(name="VS", filePath="https://drive.google.com/file/d/0BwxRocCss2a5cGJ1SXBlSTBUQ0U/preview"))
     db.session.commit()
     refreshdb()
     print 'Initialized the database'

@@ -51,6 +51,12 @@
     padding: 20px;
 }
 
+.view-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .page-container{
   background-color: white;
 }
@@ -392,6 +398,16 @@ h2{
   font-size: 35px;
   margin-left: 40px;
   color: white;
+}
+
+.usit-brading:link,
+.usit-branding:visited,
+.usit-branding:hover,
+.usit-branding:active {
+  font-size: 35px;
+  margin-left: 40px;
+  color: white;
+  text-decoration: none;
 }
 
 .user-name{

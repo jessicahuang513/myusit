@@ -23,6 +23,20 @@ roles_users = db.Table('roles_users',
 		db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
 )
 
+class FundFile(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String)
+    filePath = db.Column(db.String)
+    owner = db.Column(db.String)
+    fund = db.Column(db.String)
+
+class AnalystFile(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String)
+    filePath = db.Column(db.String)
+    owner = db.Column(db.String)
+    analyst = db.Column(db.String)
+
 class RecentVote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticker = db.Column(db.String(5))

@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, Mar
 import forms
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
-from models import User, Tickers, Transactions, Role, Stock, Vote, RecentVote
+from models import User, Tickers, Transactions, Role, Stock, Vote, RecentVote, FundFile, AnalystFile
 from PlatformApp import db, app, login_manager, mail, cipher_suite, server
 from yahoo_finance import Share
 from pytz import timezone
@@ -653,7 +653,15 @@ def log_in():
 @login_required
 def analyst_group():
     if not(current_user.analyst is None) and current_user.analyst in current_analysts:
-        return render_template('dashboard.html', showAnalystGroup = True, showAttendance = False, showFund = False, firstName = current_user.firstName, lastName = current_user.lastName)
+        if len(current_user.roles) > 0 and (current_user.roles[0].name == 'Officer' or current_user.roles[0].name=='Admin'):
+            addFiles = True
+        else:
+            addFiles = False
+        analystFiles = AnalystFile.query.all()
+        analystFileURLs = []
+        for file in analystFiles:
+            analystFileURLs.append(file.filePath)
+        return render_template('dashboard.html', showAnalystGroup = True, showAttendance = False, showFund = False, firstName = current_user.firstName, lastName = current_user.lastName, analystFiles = analystFiles, URLs = analystFileURLs, showAGFileButton = addFiles)
     return redirect(url_for('dashboard'))
 
 @app.route('/fund', methods=['GET', 'POST'])
@@ -726,6 +734,15 @@ def addstock(name, symbol, price):
         index += 1
 
     refreshdb()
+
+@app.route('/newagmaterial', methods = ['POST', 'GET'])
+def newagmaterial():
+    if request.method == 'POST':
+        agmaterial = AnalystFile(name = request.form['name'], filePath = request.form['filepath'], owner = current_user.email)
+        db.session.add(agmaterial)
+        db.session.commit()
+
+        return redirect('analystgroup')
 
 @app.route('/newvote', methods = ['POST', 'GET'])
 def newvote():

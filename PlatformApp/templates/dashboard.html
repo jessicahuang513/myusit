@@ -11,7 +11,10 @@
     <link rel="stylesheet" href="css/normalize.min.css">
     <link rel="stylesheet" href="css/main.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <script src='../static/js/Chart.min.js'></script>
+    <script src="../static/js/dashboard.js"></script>
 
     <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 
@@ -27,7 +30,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   </head>
@@ -36,7 +38,7 @@
   <body class="page-container">
 
     <div class="header-banner">
-      <div class="usit-branding">USIT</div>
+      <a class="usit-branding" href="/dashboard">USIT</a>
       <div class="dropdown">
         <a href="#dropdown" role="button" data-toggle="dropdown" class="user-name">{{firstName}} {{lastName}} <i class="fa fa-angle-down"></i></a>
         <!-- <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{firstName}} {{lastName}}</button> -->
@@ -86,7 +88,52 @@
     {% endif %}
 
     {% if showAnalystGroup %}
+      {% if showAGFileButton %}
+        <div class="sign-in-button-container">
+          <a data-toggle="collapse" role="button" data-target="#addagfile" class="sign-in-button">Add AG Materials</a>
+        </div>
+      {% endif %}
+      <div id="addagfile" class="collapse">
+        <section class="positions-container">
+
+          <div class="stats-title">
+            <h1>Add Analyst Group Materials</h1>
+          </div>
+
+          <div class="upload-container">
+            <form action = "newagmaterial" method = "POST" 
+               enctype = "multipart/form-data">
+               <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+                Name<input type="text" name="name" style="margin-left:20px"/>
+               </div>
+               <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+                URL<input type="text" name="filepath" style="margin-left:20px"/>
+               </div>
+              <div style="display:flex; justify-content:center">
+                <input type = "submit" style="margin-top: -5px; margin-bottom:10px;">
+              </div>
+            </form>
+          </div>
+
+        </section>
+      </div>
       <div class="page-header">Analyst Group Materials</div>
+      <div class="view-file">
+        <script type="text/javascript">
+          function loadAnalystDocument() {
+            var files = "{{ ', '.join(URLs) }}".split(",");
+            var selectedFileIndex = document.getElementById('analystGroupFileSelect').selectedIndex;
+            document.getElementById('analystGroupFile').src = files[selectedFileIndex];
+          }
+        </script>
+        <select id="analystGroupFileSelect" style="margin: 30px 0 10px 0;">
+            {% for file in analystFiles %}
+              <option value="{{file.name}}">{{file.name}}</option>
+            {% endfor %}
+        </select>
+        <input id="changeFile" type="button" value="View" onClick="loadAnalystDocument()" style="margin: 0 0 10px 0;"/>
+        <iframe id="analystGroupFile" src="{{URLs[0]}}" style="width: 80%; height: 50vh; margin: auto;"></iframe>
+      </div>
     {% endif %}
 
     {% if showFund %}
@@ -95,7 +142,7 @@
 
     </div>
 
-    {% if not showAttendance and not showAnalystGroup and not showFund%}
+    {% if not showAttendance and not showAnalystGroup and not showFund %}
 
     <div class="sign-in-button-container">
       <a href="/signin" role="button" class="sign-in-button">Sign In to GM</a>
