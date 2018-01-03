@@ -137,7 +137,55 @@
     {% endif %}
 
     {% if showFund %}
+      {% if showFundFileButton %}
+        <div class="sign-in-button-container">
+          <a data-toggle="collapse" role="button" data-target="#addagfile" class="sign-in-button">Add Fund Materials</a>
+        </div>
+      {% endif %}
+      <div id="addagfile" class="collapse">
+        <section class="positions-container">
+
+          <div class="stats-title">
+            <h1>Add Fund Materials</h1>
+          </div>
+
+          <div class="upload-container">
+            <form action = "newfundmaterial" method = "POST" 
+               enctype = "multipart/form-data">
+               <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+                Name<input type="text" name="name" style="margin-left:20px"/>
+               </div>
+               <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+                URL<input type="text" name="filepath" style="margin-left:20px"/>
+               </div>
+               <div style="padding:10px; margin:auto; width:50%; display:flex; justify-content: center; align-items: center">
+                Fund<input type="text" name="fund" style="margin-left:20px" value="{{currentUserFund}}"/>
+               </div>
+              <div style="display:flex; justify-content:center">
+                <input type = "submit" style="margin-top: -5px; margin-bottom:10px;">
+              </div>
+            </form>
+          </div>
+
+        </section>
+      </div>
       <div class="page-header">Fund Materials</div>
+      <div class="view-file">
+        <script type="text/javascript">
+          function loadFundDocument() {
+            var files = "{{ ', '.join(URLs) }}".split(",");
+            var selectedFileIndex = document.getElementById('fundFileSelect').selectedIndex;
+            document.getElementById('fundFile').src = files[selectedFileIndex];
+          }
+        </script>
+        <select id="fundFileSelect" style="margin: 30px 0 10px 0;">
+            {% for file in fundFiles %}
+              <option value="{{file.name}}">{{file.name}}</option>
+            {% endfor %}
+        </select>
+        <input id="changeFundFile" type="button" value="View" onClick="loadFundDocument()" style="margin: 0 0 10px 0;"/>
+        <iframe id="fundFile" src="{{URLs[0]}}" style="width: 80%; height: 50vh; margin: auto;"></iframe>
+      </div>
     {% endif %}
 
     </div>

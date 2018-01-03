@@ -668,7 +668,18 @@ def analyst_group():
 @login_required
 def fund():
     if not(current_user.fund is None) and current_user.fund in current_funds:
-        return render_template('dashboard.html', showAnalystGroup = False, showAttendance = False, showFund = True, firstName = current_user.firstName, lastName = current_user.lastName)
+        if len(current_user.roles) > 0 and (current_user.roles[0].name == 'Officer' or current_user.roles[0].name == 'Admin'):
+            addFiles = True
+        else:
+            addFiles = False
+        if current_user.fund:
+            fundFiles = FundFile.query.filter_by(fund = current_user.fund)
+        else:
+            fundFiles = FundFile.query.all()
+        fundFileURLs = []
+        for file in fundFiles:
+            fundFileURLs.append(file.filePath)
+        return render_template('dashboard.html', showAnalystGroup = False, showAttendance = False, showFund = True, currentUserFund = current_user.fund, firstName = current_user.firstName, lastName = current_user.lastName, fundFiles = fundFiles, URLs = fundFileURLs, showFundFileButton = addFiles)
     return redirect(url_for('dashboard'))
 
 @app.route('/uploader', methods = ['GET', 'POST'])
@@ -743,6 +754,15 @@ def newagmaterial():
         db.session.commit()
 
         return redirect('analystgroup')
+
+@app.route('/newfundmaterial', methods = ['POST', 'GET'])
+def newfundmaterial():
+    if request.method == 'POST':
+        fundmaterial = FundFile(name = request.form['name'], filePath = request.form['filepath'], owner = current_user.email, fund = request.form['fund'])
+        db.session.add(fundmaterial)
+        db.session.commit()
+
+        return redirect('fund')
 
 @app.route('/newvote', methods = ['POST', 'GET'])
 def newvote():

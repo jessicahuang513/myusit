@@ -17,6 +17,9 @@ def initdb():
     db.session.add(AnalystFile(name="WSM", filePath="https://drive.google.com/file/d/1szWz-2uHJQqWEbLJVL9RISAOfJ9k4Ja8/preview"))
     db.session.add(AnalystFile(name="DCF", filePath="https://drive.google.com/file/d/170_Gg0-e9hXgB5UMJApjsI0Y96_r4nMg/preview"))
     db.session.add(AnalystFile(name="VS", filePath="https://drive.google.com/file/d/0BwxRocCss2a5cGJ1SXBlSTBUQ0U/preview"))
+    db.session.add(FundFile(name="WSM", filePath="https://drive.google.com/file/d/1szWz-2uHJQqWEbLJVL9RISAOfJ9k4Ja8/preview", fund='TMT'))
+    db.session.add(FundFile(name="DCF", filePath="https://drive.google.com/file/d/170_Gg0-e9hXgB5UMJApjsI0Y96_r4nMg/preview", fund = 'TMT'))
+    db.session.add(FundFile(name="VS", filePath="https://drive.google.com/file/d/0BwxRocCss2a5cGJ1SXBlSTBUQ0U/preview", fund='Energy'))
     db.session.commit()
     refreshdb()
     print 'Initialized the database'
