@@ -322,7 +322,7 @@ def get_user_emails():
 
 @manager.command
 def add_analyst_group():
-    eid_input = str(input("What is the GM's EID? "))
+    eid_input = str(raw_input("What is the GM's EID? "))
     student = User.query.filter_by(eid = eid_input)
     if student is not None:
         fullName = student.firstName + " " + student.lastName
