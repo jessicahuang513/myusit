@@ -321,6 +321,20 @@ def get_user_emails():
         print(user.email)
 
 @manager.command
+def add_analyst_group():
+    eid_input = str(input("What is the GM's EID? "))
+    student = User.query.filter_by(eid = eid_input)
+    if student is not None:
+        fullName = student.firstName + " " + student.lastName
+        analyst_group = str(input("Please list the senior analyst for {}".format(fullName)))
+        student.analyst = analyst_group
+        db.session.commit()
+
+    student_new = User.query.filter_by(eid = eid_input)
+    fullName = student.firstName + " " + student.lastName
+    print(student_new + " is {}'s SA.".format(fullName))
+
+@manager.command
 def addstock():
     name = str(raw_input("What is the file name? "))
     symbol = str(raw_input("Ticker: "))
