@@ -332,7 +332,7 @@ def add_analyst_group():
 
     student_new = User.query.filter_by(eid = eid_input).first()
     fullName = student.firstName + " " + student.lastName
-    print(student_new + " is {}'s SA.".format(fullName))
+    print(student.analyst + " is {}'s SA.".format(fullName))
 
 @manager.command
 def addstock():
