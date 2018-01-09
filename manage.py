@@ -335,6 +335,20 @@ def add_analyst_group():
     print(student.analyst + " is {}'s SA.".format(fullName))
 
 @manager.command
+def add_fund():
+    eid_input = str(raw_input("What is the GM's EID? "))
+    student = User.query.filter_by(eid = eid_input).first()
+    if student is not None:
+        fullName = student.firstName + " " + student.lastName
+        fund = str(raw_input("Please list the fund for {}: ".format(fullName)))
+        student.fund = fund
+        db.session.commit()
+
+    student_new = User.query.filter_by(eid = eid_input).first()
+    fullName = student.firstName + " " + student.lastName
+    print(student.fund + " is {}'s fund.".format(fullName))
+
+@manager.command
 def addstock():
     name = str(raw_input("What is the file name? "))
     symbol = str(raw_input("Ticker: "))
