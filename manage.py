@@ -5,6 +5,9 @@ from openpyxl import load_workbook, Workbook
 import requests
 from spreadsheet import sheet
 from dues import transactions, member_info
+import httplib2
+from boxsdk import OAuth2
+from boxsdk import Client
 
 
 manager = Manager(app)
@@ -22,14 +25,52 @@ def initdb():
     db.session.add(FundFile(name="VS", filePath="https://drive.google.com/file/d/0BwxRocCss2a5cGJ1SXBlSTBUQ0U/preview", fund='Energy'))
     db.session.commit()
     refreshdb()
-    print 'Initialized the database'
+    print('Initialized the database')
+
+
+@manager.command
+def get_box():
+    dev_token = str(raw_input("Developer token: "))
+
+    oauth = OAuth2(
+      client_id='l91tu18y9v1t9yth4w3xub87jbyln18k',
+      client_secret='BYSJR7wr4Tl7Socbw3l87FYK01OOE91r',
+      access_token=dev_token,
+    )
+
+    client = Client(oauth)
+    root_folder = client.folder(folder_id='0')
+    shared_folder = root_folder.create_subfolder('shared_folder')
+    # uploaded_file = shared_folder.upload('/path/to/file')
+    # shared_link = shared_folder.get_shared_link()
+
+@manager.command
+def print_files():
+    """Shows basic usage of the Google Drive API.
+
+    Creates a Google Drive API service object and outputs the names and IDs
+    for up to 10 files.
+    """
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    service = discovery.build('drive', 'v3', http=http)
+
+    results = service.files().list(
+        pageSize=10,fields="nextPageToken, files(id, name)").execute()
+    items = results.get('files', [])
+    if not items:
+        print('No files found.')
+    else:
+        print('Files:')
+        for item in items:
+            print('{0} ({1})'.format(item['name'], item['id']))
 
 @manager.command
 def dropdb():
     if prompt_bool(
         "Are you sure you want to lose all your data"):
         db.drop_all()
-        print 'Dropped the database'
+        print('Dropped the database')
 
 @manager.command
 def get_attendance():
