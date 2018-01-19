@@ -40,11 +40,25 @@ def get_box():
 
     client = Client(oauth)
     root_folder = client.folder(folder_id='0')
-    shared_folder = root_folder.create_subfolder('shared_folder')
-    items = client.folder(folder_id='w0l7qg69b3tiseyslfaij9bcx6g1l0co').get_items(limit=100, offset=0)
+    USIT_folder = root_folder.get_items(limit=100, offset=0)[0]
+    ag_folder = USIT_folder.get_items(limit=100, offset=0)[0]
 
-    for item in items:
-        print item.get()['name']
+    for item in ag_folder.get_items(limit=100, offset=0):
+        file_name = item.get()['name']
+        download_url = item.get_shared_link_download_url()
+        code = download_url.split("/static/")[1].split(".")[0]
+
+        file_url = "https://app.box.com/embed/s/" + code
+        # print(file_url)
+
+        file = AnalystFile(name = file_name, filePath = file_url, owner = 'Box')
+        db.session.add(file)
+        db.session.commit()
+        print("I added " + file_name + " to the database!")
+
+    # print(client.search('USIT Platform', limit=100, offset=0)[0].metadata())
+
+    # shared_folder = root_folder.create_subfolder('shared_folder')
 
     # uploaded_file = shared_folder.upload('/path/to/file')
     # shared_link = shared_folder.get_shared_link()

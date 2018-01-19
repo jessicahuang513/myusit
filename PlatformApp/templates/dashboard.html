@@ -132,7 +132,8 @@
             {% endfor %}
         </select>
         <input id="changeFile" type="button" value="View" onClick="loadAnalystDocument()" style="margin: 0 0 10px 0;"/>
-        <iframe id="analystGroupFile" src="{{URLs[0]}}" style="width: 80%; height: 50vh; margin: auto;"></iframe>
+        <!-- <iframe id="analystGroupFile" src="{{URLs[0]}}" style="width: 80%; height: 50vh; margin: auto;"></iframe> -->
+        <iframe src="{{URLs[0]}}" id="analystGroupFile" style="width: 80%; height: 50vh; margin: auto;" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe> 
       </div>
     {% endif %}
 
