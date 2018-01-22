@@ -29,7 +29,7 @@ def initdb():
 
 
 @manager.command
-def get_box():
+def get_ag_materials():
     dev_token = str(raw_input("Developer token: "))
 
     oauth = OAuth2(
