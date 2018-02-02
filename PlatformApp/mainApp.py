@@ -37,7 +37,7 @@ else:
 basedir = os.path.abspath(os.path.dirname(__file__))
 date = time.strftime("%m/%d/%Y")
 current_analysts = ['Srija Nalla']
-current_funds = ['TMT']
+current_funds = ['TMT', 'Industrials', 'Global Macros', 'Energy', 'Emerging Markets', 'Consumer']
 
 # app = Flask(__name__)
 # app.config['SECRET_KEY'] = '~t\x86\xc9\x1ew\x8bOcX\x85O\xb6\xa2\x11kL\xd1\xce\x7f\x14<y\x9e'

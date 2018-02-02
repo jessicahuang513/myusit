@@ -17,12 +17,6 @@ def initdb():
     db.create_all()
     admin = Role(name="Admin", description="Gets to look at all the rankings.")
     db.session.add(User(firstName="Arnav", lastName="Jain",email="arnav_jain@utexas.edu", eid="aj24872", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
-    db.session.add(AnalystFile(name="WSM", filePath="https://drive.google.com/file/d/1szWz-2uHJQqWEbLJVL9RISAOfJ9k4Ja8/preview"))
-    db.session.add(AnalystFile(name="DCF", filePath="https://drive.google.com/file/d/170_Gg0-e9hXgB5UMJApjsI0Y96_r4nMg/preview"))
-    db.session.add(AnalystFile(name="VS", filePath="https://drive.google.com/file/d/0BwxRocCss2a5cGJ1SXBlSTBUQ0U/preview"))
-    db.session.add(FundFile(name="WSM", filePath="https://drive.google.com/file/d/1szWz-2uHJQqWEbLJVL9RISAOfJ9k4Ja8/preview", fund='TMT'))
-    db.session.add(FundFile(name="DCF", filePath="https://drive.google.com/file/d/170_Gg0-e9hXgB5UMJApjsI0Y96_r4nMg/preview", fund = 'TMT'))
-    db.session.add(FundFile(name="VS", filePath="https://drive.google.com/file/d/0BwxRocCss2a5cGJ1SXBlSTBUQ0U/preview", fund='Energy'))
     db.session.commit()
     refreshdb()
     print('Initialized the database')
@@ -46,17 +40,20 @@ def get_ag_materials():
     ag_folder = USIT_folder.get_items(limit=100, offset=0)[0]
 
     for item in ag_folder.get_items(limit=100, offset=0):
-        file_name = item.get()['name']
-        download_url = item.get_shared_link_download_url()
-        code = download_url.split("/static/")[1].split(".")[0]
+        try:
+            file_name = item.get()['name']
+            download_url = item.get_shared_link_download_url()
+            code = download_url.split("/static/")[1].split(".")[0]
 
-        file_url = "https://app.box.com/embed/s/" + code
-        # print(file_url)
+            file_url = "https://app.box.com/embed/s/" + code
+            # print(file_url)
 
-        file = AnalystFile(name = file_name, filePath = file_url, owner = 'Box')
-        db.session.add(file)
-        db.session.commit()
-        print("I added " + file_name + " to the database!")
+            file = AnalystFile(name = file_name, filePath = file_url, owner = 'Box')
+            db.session.add(file)
+            db.session.commit()
+            print("I added " + file_name + " to the database!")
+        except:
+            print("Cannot add file!")
 
     # print(client.search('USIT Platform', limit=100, offset=0)[0].metadata())
 
@@ -89,15 +86,18 @@ def get_fund_materials():
         #print folder_name
 
         for file in item.get_items(limit=100, offset=0):
-            download_url = file.get_shared_link_download_url()
-            file_name = file.get()['name']
-            code = download_url.split("/static/")[1].split(".")[0]
-            file_url = "https://app.box.com/embed/s/" + code
-            print(file_url)
-            file = FundFile(name = file_name, filePath=file_url, owner='Box', fund= folder_name)
-            db.session.add(file)
-            db.session.commit()
-            print("I added " + file_name + " to the database!")
+            try:
+                download_url = file.get_shared_link_download_url()
+                file_name = file.get()['name']
+                code = download_url.split("/static/")[1].split(".")[0]
+                file_url = "https://app.box.com/embed/s/" + code
+                print(file_url)
+                file = FundFile(name = file_name, filePath=file_url, owner='Box', fund= folder_name)
+                db.session.add(file)
+                db.session.commit()
+                print("I added " + file_name + " to the database!")
+            except:
+                print("Cannot add file!")
 
 @manager.command
 def dropdb():
