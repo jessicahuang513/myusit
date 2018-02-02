@@ -41,6 +41,8 @@ def get_ag_materials():
     client = Client(oauth)
     root_folder = client.folder(folder_id='0')
     USIT_folder = root_folder.get_items(limit=100, offset=0)[0]
+    # for item in USIT_folder.get_items(limit=100, offset=0):
+    #     print item.get()['name']
     ag_folder = USIT_folder.get_items(limit=100, offset=0)[0]
 
     for item in ag_folder.get_items(limit=100, offset=0):
@@ -63,27 +65,39 @@ def get_ag_materials():
     # uploaded_file = shared_folder.upload('/path/to/file')
     # shared_link = shared_folder.get_shared_link()
 
+@manager.command
+def get_fund_materials():
+    #authentication
+    #link to get Box developer token: https://app.box.com/developers/console/app/524950/configuration
+    dev_token = str(raw_input("Developer token: "))
 
-# @manager.command
-# def print_files():
-#     """Shows basic usage of the Google Drive API.
-#
-#     Creates a Google Drive API service object and outputs the names and IDs
-#     for up to 10 files.
-#     """
-#     credentials = get_credentials()
-#     http = credentials.authorize(httplib2.Http())
-#     service = discovery.build('drive', 'v3', http=http)
-#
-#     results = service.files().list(
-#         pageSize=10,fields="nextPageToken, files(id, name)").execute()
-#     items = results.get('files', [])
-#     if not items:
-#         print('No files found.')
-#     else:
-#         print('Files:')
-#         for item in items:
-#             print('{0} ({1})'.format(item['name'], item['id']))
+    oauth = OAuth2(
+        client_id='l91tu18y9v1t9yth4w3xub87jbyln18k',
+        client_secret='BYSJR7wr4Tl7Socbw3l87FYK01OOE91r',
+        access_token=dev_token,
+    )
+
+    #go to fund folder
+    client = Client(oauth)
+    root_folder = client.folder(folder_id='0')
+    USIT_folder = root_folder.get_items(limit=100, offset=0)[0]
+    fund_folder = USIT_folder.get_items(limit=100, offset=0)[1]
+
+    #adds files in each fund folder to the database
+    for item in fund_folder.get_items(limit=100, offset=0):
+        folder_name = item.get()['name']
+        #print folder_name
+
+        for file in item.get_items(limit=100, offset=0):
+            download_url = file.get_shared_link_download_url()
+            file_name = file.get()['name']
+            code = download_url.split("/static/")[1].split(".")[0]
+            file_url = "https://app.box.com/embed/s/" + code
+            print(file_url)
+            file = FundFile(name = file_name, filePath=file_url, owner='Box', fund= folder_name)
+            db.session.add(file)
+            db.session.commit()
+            print("I added " + file_name + " to the database!")
 
 @manager.command
 def dropdb():

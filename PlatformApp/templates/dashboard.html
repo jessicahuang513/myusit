@@ -185,7 +185,7 @@
             {% endfor %}
         </select>
         <input id="changeFundFile" type="button" value="View" onClick="loadFundDocument()" style="margin: 0 0 10px 0;"/>
-        <iframe id="fundFile" src="{{URLs[0]}}" style="width: 80%; height: 50vh; margin: auto;"></iframe>
+        <iframe src="{{URLs[0]}}" id="fundFile" style="width: 80%; height: 50vh; margin: auto;" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
       </div>
     {% endif %}
 
