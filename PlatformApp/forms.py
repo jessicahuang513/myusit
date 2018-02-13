@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo,\
 #TODO: Add remember me button in index.html
 
 class LoginForm(Form):
-    eid = StringField('EID', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('', validators=[DataRequired()])
     remember_me = BooleanField('Keep me logged in')
     #submit = SubmitField('')

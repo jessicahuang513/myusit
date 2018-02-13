@@ -1,5 +1,5 @@
 from datetime import datetime
-from PlatformApp import db, cipher_suite
+from PlatformApp import db, cipher_suite, login_manager
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -59,10 +59,10 @@ class Stock(db.Model):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    eid = db.Column(db.String, unique = True)
+    eid = db.Column(db.String)
     firstName = db.Column(db.String(80))
     lastName = db.Column(db.String(80))
-    email = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(80))
     attendance = db.Column(db.Integer)
     dues = db.Column(db.Integer)
     atLatestMeeting = db.Column(db.Boolean)
@@ -90,7 +90,7 @@ class User(db.Model, UserMixin):
         # print("HERE IS THE PASSWORD: ", password)
         return check_password_hash(self.password_hash, cipher_suite.decrypt(password).decode())
 
-    @staticmethod
+    @login_manager.user_loader
     def get_by_email(email):
         return User.query.filter_by(email=email).first()
 

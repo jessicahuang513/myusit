@@ -8,7 +8,8 @@ from dues import transactions, member_info
 import httplib2
 from boxsdk import OAuth2
 from boxsdk import Client
-
+from votingchallenge import votesession, get_users_from_vote
+from signin import signsession
 
 manager = Manager(app)
 
@@ -21,7 +22,6 @@ def initdb():
     refreshdb()
     print('Initialized the database')
 
-
 @manager.command
 def get_ag_materials():
     dev_token = str(raw_input("Developer token: "))
@@ -29,7 +29,7 @@ def get_ag_materials():
     oauth = OAuth2(
       client_id='l91tu18y9v1t9yth4w3xub87jbyln18k',
       client_secret='BYSJR7wr4Tl7Socbw3l87FYK01OOE91r',
-      access_token=dev_token,
+      access_token=dev_token
     )
 
     client = Client(oauth)
@@ -124,8 +124,8 @@ def print_zero_dues():
 
 @manager.command
 def reset_attendance():
-    eid = str(input("EID: "))
-    member = User.get_by_eid(eid)
+    email = str(input("Email: "))
+    member = User.get_by_email(email)
     if not member is None:
         meetings_attended = int(input("How many meetings do you want to reset it to? "))
         member.attendance = meetings_attended
@@ -137,8 +137,8 @@ def add_dues():
     addDues = True
 
     while addDues:
-        eid = str(raw_input("EID: "))
-        member = User.get_by_eid(eid)
+        email = str(raw_input("Email: "))
+        member = User.get_by_email(email)
         if not member is None:
             dues = int(raw_input("How much dues do you want to reset it to? "))
             member.dues = dues
@@ -397,29 +397,29 @@ def get_user_emails():
 
 @manager.command
 def add_analyst_group():
-    eid_input = str(raw_input("What is the GM's EID? "))
-    student = User.query.filter_by(eid = eid_input).first()
+    email_input = str(raw_input("What is the GM's email? "))
+    student = User.query.filter_by(email = email_input).first()
     if student is not None:
         fullName = student.firstName + " " + student.lastName
         analyst_group = str(raw_input("Please list the senior analyst for {}: ".format(fullName)))
         student.analyst = analyst_group
         db.session.commit()
 
-    student_new = User.query.filter_by(eid = eid_input).first()
+    student_new = User.query.filter_by(email = email_input).first()
     fullName = student.firstName + " " + student.lastName
     print(student.analyst + " is {}'s SA.".format(fullName))
 
 @manager.command
 def add_fund():
-    eid_input = str(raw_input("What is the GM's EID? "))
-    student = User.query.filter_by(eid = eid_input).first()
+    email_input = str(raw_input("What is the GM's email? "))
+    student = User.query.filter_by(email = email_input).first()
     if student is not None:
         fullName = student.firstName + " " + student.lastName
         fund = str(raw_input("Please list the fund for {}: ".format(fullName)))
         student.fund = fund
         db.session.commit()
 
-    student_new = User.query.filter_by(eid = eid_input).first()
+    student_new = User.query.filter_by(email = email_input).first()
     fullName = student.firstName + " " + student.lastName
     print(student.fund + " is {}'s fund.".format(fullName))
 
@@ -460,6 +460,37 @@ def fixdb():
             num_students_wo_id += 1
             print("I fixed", student.firstName, "!")
 
+        db.session.commit()
+
+@manager.command
+def add_users_from_voting():
+    users = get_users_from_vote()
+
+    print(len(users))
+
+    for user in users:
+        try:
+            db.session.add(User(id = user.id,
+                                firstName = user.firstName,
+                                lastName = user.lastName,
+                                email = user.email,
+                                password_hash = user.password_hash,
+                                ret = user.ret,
+                                score = user.score,
+                                active = user.active
+                                ))
+            db.session.commit()
+            print("Added " + user.email)
+        except:
+            print("The session already contains this user.")
+            print(str(user.id) + ". " + user.email)
+
+@manager.command
+def get_eid():
+    for user in User.query.all():
+        print(user.email)
+        eid = str(input("What is your EID? "))
+        user.eid = eid
         db.session.commit()
 
 if __name__ == '__main__':

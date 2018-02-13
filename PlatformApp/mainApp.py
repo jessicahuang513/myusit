@@ -184,9 +184,9 @@ def index():
     form = forms.LoginForm()
     setForm = forms.SignUpForm()
     if request.method=='POST' and request.form['btn'] == 'log in':
-        email = form.eid.data
+        email = form.email.data
         password = cipher_suite.encrypt(form.password.data.encode())
-        user = User.get_by_eid(email)
+        user = User.get_by_email(email)
         if user is not None and user.check_password(password):
             login_user(user, False)
             return redirect(url_for('dashboard'))
