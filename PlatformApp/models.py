@@ -90,7 +90,7 @@ class User(db.Model, UserMixin):
         # print("HERE IS THE PASSWORD: ", password)
         return check_password_hash(self.password_hash, cipher_suite.decrypt(password).decode())
 
-    @login_manager.user_loader
+    @staticmethod
     def get_by_email(email):
         return User.query.filter_by(email=email).first()
 
