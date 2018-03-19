@@ -73,10 +73,6 @@ def get_roles_users():
 	return votesession.query(roles_users).all()
 
 @manager.command
-def print_types():
-	for transaction in votesession.query(Transactions).all():
-
-@manager.command
 def get_non_user_data():
 	print("Avoid error string.")
 
