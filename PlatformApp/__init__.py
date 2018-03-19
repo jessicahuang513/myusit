@@ -16,8 +16,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)	
 app.config['SECRET_KEY'] = '~t\x86\xc9\x1ew\x8bOcX\x85O\xb6\xa2\x11kL\xd1\xce\x7f\x14<y\x9e'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'platform.db')
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://qcksqjzmfkdxdo:password@127.0.0.1:5432/myusit'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://qcksqjzmfkdxdo:password@127.0.0.1:5432/myusit'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['DEBUG'] = True
 app.config['SECURITY_RECOVERABLE'] = True
 app.config['SECURITY_REGISTERABLE'] = True
@@ -48,7 +48,7 @@ app.config.update(
 	#EMAIL SETTINGS
 	MAIL_SERVER='smtp.gmail.com',
 	MAIL_PORT=587,
-	MAIL_USE_SSL=False,
+	MAIL_USE_TLS=True,
 	MAIL_USERNAME = 'votingchallenge@usiteam.org',
 	MAIL_PASSWORD = 'votingchallenge2016'
 	)
