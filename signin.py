@@ -6,7 +6,7 @@ from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 from PlatformApp import db
 
-signe = create_engine('postgresql+psycopg2://signinapp:password@127.0.0.1:5432/signin')
+signe = create_engine('postgresql+psycopg2://kxwbdcokiefzbx:password@127.0.0.1:5432/signin')
 
 Session = sessionmaker(bind=signe)
 

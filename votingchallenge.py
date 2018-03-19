@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-votee = create_engine('postgresql+psycopg2://voteapp:password@127.0.0.1:5432/votingchallenge')
+votee = create_engine('postgresql+psycopg2://byciwgzypwngid:password@127.0.0.1:5432/votingchallenge')
 
 Session = sessionmaker(bind=votee)
 
@@ -58,16 +58,28 @@ class User(Base):
 	def __repr__(self):
 		return "<User '{}'>".format(self.email)
 
-@manager.command
-def print_users():
-	for stock in votesession.query(Tickers).all():
-		print(stock.ticker)
+# @manager.command
+# def print_users():
+# 	for stock in votesession.query(Tickers).all():
+# 		print(stock.ticker)
 
 def get_users_from_vote():
 	return votesession.query(User).all()
 
+def get_ticker_identifier():
+	return votesession.query(ticker_identifier).all()
+
+def get_roles_users():
+	return votesession.query(roles_users).all()
+
+@manager.command
+def print_types():
+	for transaction in votesession.query(Transactions).all():
+
 @manager.command
 def get_non_user_data():
+	print("Avoid error string.")
+
 	# for stock in votesession.query(Stock).all():
 	# 	try:
 	# 		db.session.add(Stock(id = stock.id,
@@ -93,28 +105,33 @@ def get_non_user_data():
 	# 	except:
 	# 		print("Doesn't work.")
 
-	# for transaction in votesession.query(Transactions).all():
-	# 	# try:
-	# 	db.session.add(Transactions(id = transaction.id,
-	# 								user_id = transaction.user_id,
-	# 								ticker = transaction.ticker,
-	# 								date = transaction.date,
-	# 								end_price = transaction.end_price,
-	# 								returns = transaction.returns))
-	# 	db.session.commit()
-	# 	print("Added " + transaction.ticker + " " + transaction.user_id)
-	# 	# except:
-	# 	# 	print("Doesn't work.")
-
-	for role in votesession.query(Role).all():
+	for transaction in votesession.query(Transactions).all():
 		try:
-			db.session.add(Role(id = role.id,
-								name = role.name,
-								description = role.description))
+			db.session.add(Transactions(id = transaction.id,
+										user_id = transaction.user_id,
+										ticker = transaction.ticker,
+										date = transaction.date,
+										end_price = transaction.end_price,
+										returns = transaction.returns))
 			db.session.commit()
-			print("Added " + role.name)
-		except:
+			print("Added " + transaction.ticker + " " + transaction.user_id)
+		except Exception as e:
 			print("Doesn't work.")
+			print(e)
+
+	# for role in votesession.query(Role).all():
+	# 	try:
+	# 		if role.id != 1:
+	# 			db.session.add(Role(id = role.id,
+	# 								name = role.name,
+	# 								description = role.description))
+	# 			db.session.commit()
+	# 			print("Added " + role.name)
+	# 		else:
+	# 			print("Admin already exists so didn't add it again!")
+	# 	except Exception as e:
+	# 		print("Doesn't work.")
+	# 		print(e)
 
 if __name__ == '__main__':
 	manager.run()

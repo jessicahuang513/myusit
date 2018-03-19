@@ -1,17 +1,24 @@
 from PlatformApp.mainApp import app, db, update_ret, add_stock, update_score, create_stock_info
-from PlatformApp.models import User, Tickers, Role, Transactions, Stock, Vote, RecentVote, AnalystFile, FundFile
+from PlatformApp.models import User, Tickers, Role, Transactions, Stock, Vote, RecentVote, AnalystFile, FundFile, ticker_identifier, roles_users
 from flask_script import Manager, prompt_bool
 from openpyxl import load_workbook, Workbook
 import requests
 from spreadsheet import sheet
 from dues import transactions, member_info
+from votingchallenge import get_users_from_vote, get_ticker_identifier, get_roles_users
 import httplib2
 from boxsdk import OAuth2
 from boxsdk import Client
-from votingchallenge import votesession, get_users_from_vote
-from signin import signsession
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Float, insert
+from sqlalchemy.orm import sessionmaker, relationship
+# from votingchallenge import votesession, get_users_from_vote
+# from signin import signsession
 
 manager = Manager(app)
+
+# platforme = create_engine('postgresql+psycopg2://qcksqjzmfkdxdo:password@127.0.0.1:5432/myusit')
+# Session = sessionmaker(bind=platforme)
+# platformsession = Session()
 
 @manager.command
 def initdb():
@@ -471,14 +478,21 @@ def add_users_from_voting():
     for user in users:
         try:
             db.session.add(User(id = user.id,
+                                eid = '',
                                 firstName = user.firstName,
                                 lastName = user.lastName,
                                 email = user.email,
+                                attendance = 0,
+                                dues = 0,
+                                atLatestMeeting = False,
+                                rowOnSheet = 0,
                                 password_hash = user.password_hash,
                                 ret = user.ret,
                                 score = user.score,
-                                active = user.active
-                                ))
+                                active = False,
+                                analyst = "",
+                                fund = ""))
+
             db.session.commit()
             print("Added " + user.email)
         except:
@@ -486,14 +500,36 @@ def add_users_from_voting():
             print(str(user.id) + ". " + user.email)
 
 @manager.command
-def get_eid():
-    for user in User.query.all():
-        print(user.email)
-        eid = str(input("What is your EID? "))
-        user.eid = eid
-        db.session.commit()
+def add_relationship_table():
+    vote_ticker_identifier = get_ticker_identifier()
+    vote_roles_users = get_roles_users()
+
+    # for ticker_rel in vote_ticker_identifier:
+    #     try:
+    #         platformsession.execute(ticker_identifier.insert().values(user_id = int(ticker_rel.user_id), ticker_id = int(ticker_rel.ticker_id)))
+    #         platformsession.commit()
+    #         # db.session.commit()
+    #         print("Added relationship: " + str(ticker_rel.user_id) + ", " + str(ticker_rel.ticker_id))
+    #     except Exception as e:
+    #         print(e)
+    #         print("Doesn't work.")
+
+    # for role_rel in vote_roles_users:
+    #     try:
+    #         platformsession.execute(roles_users.insert().values(user_id = int(role_rel.user_id), role_id = int(role_rel.role_id)))
+    #         platformsession.commit()
+    #         # db.session.commit()
+    #         print("Added relationship: " + str(role_rel.user_id) + ", " + str(role_rel.role_id))
+    #     except Exception as e:
+    #         print(e)
+    #         print("Doesn't work.")
+
+# @manager.command
+# def print_eids():
+#     users = get_users_from_vote()
+
+#     for user in users:
+#         print(user.eid)
 
 if __name__ == '__main__':
     manager.run()
-
-
