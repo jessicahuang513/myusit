@@ -36,7 +36,7 @@ else:
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 date = time.strftime("%m/%d/%Y")
-current_analysts = ['Srija Nalla']
+current_analysts = ['Catherine Cheng', 'Pranidhi Dadhaniya', 'Matt Hopp', 'Vibhav Joopelli', 'Juan Mogollon', 'Aaron Raj', 'Ananya Rajesh', 'Alan Shaw', 'Eric Sun']
 current_funds = ['TMT', 'Industrials', 'Global Macros', 'Energy', 'Emerging Markets', 'Consumer']
 
 # app = Flask(__name__)
@@ -136,6 +136,7 @@ def update_ret(self, stocks, transactions):
         if not transTicker is None:
             if trans.returns == 0:
                 ret += 0
+                totalStocks += 1
             else:
                 ret += trans.returns / transTicker.startingPrice
                 totalStocks += 1
