@@ -113,7 +113,7 @@ def update_ret(self, stocks, transactions):
     ret = 0
     #totalStocks = 0
     totalStockPrice = 0
-    totalTransPrice  0
+    totalTransPrice = 0
 
     # calculate sum of all starting prices for stocks to weight returns accordingly
     for stock in stocks:
