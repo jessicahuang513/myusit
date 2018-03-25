@@ -642,7 +642,7 @@ def exitPosition(exitIndex):
     else:
         exitReturn = exitPrice - exitPosition.startingPrice
 
-    transaction = Transactions(id = Transactions.query().count(),
+    transaction = Transactions(id = db.session.query(Transactions).count() + 1,
                 user_id=current_user.id,
                 ticker=str(exitPosition.ticker),
                 date=today,
@@ -730,13 +730,13 @@ def addstock(name, symbol, price):
             if  Tickers.query.filter_by(short = False, ticker = symbol).count() > 0:
                 stock = Tickers.query.filter_by(short = False, ticker = symbol).first()
             else:
-                stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=False)
+                stock = Tickers(id = db.session.query(Tickers).count() + 1, ticker=symbol, startingPrice=price, short=False)
                 # refreshdb(symbol)
         elif choice == 'No - short':
             if Tickers.query.filter_by(short = True, ticker = symbol).count() > 0:
                 stock = Tickers.query.filter_by(short = True, ticker = symbol).first()
             else:
-                stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=True)
+                stock = Tickers(id = db.session.query(Tickers).count() + 1, ticker=symbol, startingPrice=price, short=True)
                 # refreshdb(symbol)
         elif choice == 'No - no position':
             if User.query.filter(func.lower(User.email) == func.lower(str(ws['A'+str(index)].value))).first() != None:
@@ -744,7 +744,7 @@ def addstock(name, symbol, price):
                 if Transactions.query.filter_by(user_id = student.id, ticker = symbol).first() == None:
                     t = datetime.now()
                     today = str(t.month) + "/" + str(t.day) + "/" + str(t.year)
-                    transaction = Transactions(id = Transactions.query().count(),
+                    transaction = Transactions(id = db.session.query(Transactions).count() + 1,
                                                user_id=student.id,
                                                ticker=symbol,
                                                date=today,
@@ -817,13 +817,13 @@ def addstockvote(email, choice):
         if  Tickers.query.filter_by(short = False, ticker = symbol).count() > 0:
             stock = Tickers.query.filter_by(short = False, ticker = symbol).first()
         else:
-            stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=False)
+            stock = Tickers(id = db.session.query(Tickers).count() + 1, ticker=symbol, startingPrice=price, short=False)
             # refreshdb(symbol)
     elif choice == 'No - Short':
         if Tickers.query.filter_by(short = True, ticker = symbol).count() > 0:
             stock = Tickers.query.filter_by(short = True, ticker = symbol).first()
         else:
-            stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=True)
+            stock = Tickers(id = db.session.query(Tickers).count() + 1, ticker=symbol, startingPrice=price, short=True)
             # refreshdb(symbol)
     elif choice == 'No - No Position':
         if User.query.filter(func.lower(User.email) == func.lower(email)).first() != None:
@@ -831,7 +831,7 @@ def addstockvote(email, choice):
             if Transactions.query.filter_by(user_id = student.id, ticker = symbol).first() == None:
                 t = datetime.now()
                 today = str(t.month) + "/" + str(t.day) + "/" + str(t.year)
-                transaction = Transactions(id = Transactions.query().count(),
+                transaction = Transactions(id = db.session.query(Transactions).count() + 1,
                                            user_id=student.id,
                                            ticker=symbol,
                                            date=today,
