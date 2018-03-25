@@ -39,6 +39,9 @@ date = time.strftime("%m/%d/%Y")
 current_analysts = ['Catherine Cheng', 'Pranidhi Dadhaniya', 'Matt Hopp', 'Vibhav Joopelli', 'Juan Mogollon', 'Aaron Raj', 'Ananya Rajesh', 'Alan Shaw', 'Eric Sun']
 current_funds = ['TMT', 'Industrials', 'Global Macros', 'Energy', 'Emerging Markets', 'Consumer']
 
+ticker_id = 50
+transaction_id = 200
+
 # app = Flask(__name__)
 # app.config['SECRET_KEY'] = '~t\x86\xc9\x1ew\x8bOcX\x85O\xb6\xa2\x11kL\xd1\xce\x7f\x14<y\x9e'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'usit.db')
@@ -639,7 +642,8 @@ def exitPosition(exitIndex):
     else:
         exitReturn = exitPrice - exitPosition.startingPrice
 
-    transaction = Transactions(user_id=current_user.id,
+    transaction = Transactions(id = Transactions.query().count(),
+                user_id=current_user.id,
                 ticker=str(exitPosition.ticker),
                 date=today,
                 end_price = exitPrice,
@@ -726,13 +730,13 @@ def addstock(name, symbol, price):
             if  Tickers.query.filter_by(short = False, ticker = symbol).count() > 0:
                 stock = Tickers.query.filter_by(short = False, ticker = symbol).first()
             else:
-                stock = Tickers(ticker=symbol, startingPrice=price, short=False)
+                stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=False)
                 # refreshdb(symbol)
         elif choice == 'No - short':
             if Tickers.query.filter_by(short = True, ticker = symbol).count() > 0:
                 stock = Tickers.query.filter_by(short = True, ticker = symbol).first()
             else:
-                stock = Tickers(ticker=symbol, startingPrice=price, short=True)
+                stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=True)
                 # refreshdb(symbol)
         elif choice == 'No - no position':
             if User.query.filter(func.lower(User.email) == func.lower(str(ws['A'+str(index)].value))).first() != None:
@@ -740,7 +744,8 @@ def addstock(name, symbol, price):
                 if Transactions.query.filter_by(user_id = student.id, ticker = symbol).first() == None:
                     t = datetime.now()
                     today = str(t.month) + "/" + str(t.day) + "/" + str(t.year)
-                    transaction = Transactions(user_id=student.id,
+                    transaction = Transactions(id = Transactions.query().count(),
+                                               user_id=student.id,
                                                ticker=symbol,
                                                date=today,
                                                end_price = float(get_price(symbol)),
@@ -812,13 +817,13 @@ def addstockvote(email, choice):
         if  Tickers.query.filter_by(short = False, ticker = symbol).count() > 0:
             stock = Tickers.query.filter_by(short = False, ticker = symbol).first()
         else:
-            stock = Tickers(ticker=symbol, startingPrice=price, short=False)
+            stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=False)
             # refreshdb(symbol)
     elif choice == 'No - Short':
         if Tickers.query.filter_by(short = True, ticker = symbol).count() > 0:
             stock = Tickers.query.filter_by(short = True, ticker = symbol).first()
         else:
-            stock = Tickers(ticker=symbol, startingPrice=price, short=True)
+            stock = Tickers(id = Tickers.query().count(), ticker=symbol, startingPrice=price, short=True)
             # refreshdb(symbol)
     elif choice == 'No - No Position':
         if User.query.filter(func.lower(User.email) == func.lower(email)).first() != None:
@@ -826,7 +831,8 @@ def addstockvote(email, choice):
             if Transactions.query.filter_by(user_id = student.id, ticker = symbol).first() == None:
                 t = datetime.now()
                 today = str(t.month) + "/" + str(t.day) + "/" + str(t.year)
-                transaction = Transactions(user_id=student.id,
+                transaction = Transactions(id = Transactions.query().count(),
+                                           user_id=student.id,
                                            ticker=symbol,
                                            date=today,
                                            end_price = float(get_price(symbol)),

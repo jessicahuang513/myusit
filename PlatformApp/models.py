@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import json
 import requests
 from flask_security import RoleMixin
+from sqlalchemy.schema import Sequence
 
 num_gms_semester = 13
 num_gms_free = 2
@@ -113,7 +114,7 @@ class User(db.Model, UserMixin):
 
 
 class Tickers(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, Sequence('tickers_tid_seq', start=1001, increment = 1), primary_key=True)
     # ticker = db.Column(db.String(5), unique=True)
     ticker = db.Column(db.String(5))
     startingPrice = db.Column(db.Float)
@@ -124,7 +125,7 @@ class Tickers(db.Model):
         return "<Ticker '{}'>".format(self.ticker)
 
 class Transactions(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, Sequence('transactions_tid_seq', start=1001, increment = 1), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     ticker = db.Column(db.String(5))
     date = db.Column(db.String)
