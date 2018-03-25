@@ -87,7 +87,7 @@ def create_stock_info(stock):
         found_stock.percentChange = info['percentchange']
         print("I updated the info for: ", stock.ticker)
     else:
-        new_stock = Stock(ticker = stock.ticker, name = info['name'], price = info['price'], datetime = info['datetime'], change = info['gain'], percentChange = info['percentchange'])
+        new_stock = Stock(id = db.session.query(Stock).count() + 1, ticker = stock.ticker, name = info['name'], price = info['price'], datetime = info['datetime'], change = info['gain'], percentChange = info['percentchange'])
         db.session.add(new_stock)
         print("I added the info for: ", stock.ticker)
 
@@ -220,7 +220,8 @@ def index():
         print("IN SIGNUP")
         if validateSignUp():
             print("Creating User")
-            user = User(email = setForm.setEmail.data,
+            user = User(id = db.session.query(User).count() + 1,
+                        email = setForm.setEmail.data,
                         eid = setForm.setEID.data,
                         firstName = setForm.firstName.data,
                         lastName = setForm.lastName.data,
@@ -758,9 +759,9 @@ def addstock(name, symbol, price):
                 student = User.query.filter(func.lower(User.email) == func.lower(str(ws['A'+str(index)].value))).first()
                 add_stock(student, stock)
             else:
-                member = Role(name="Member", description="Just a general user to start off with")
+                member = Role(id = db.session.query(Role).count() + 1, name="Member", description="Just a general user to start off with")
                 password = passwords.generate()
-                db.session.add(User(firstName="", lastName="",email=str(ws['A'+str(index)].value), password=password, roles=[member]))
+                db.session.add(User(id = db.session.query(User).count() + 1, firstName="", lastName="",email=str(ws['A'+str(index)].value), password=password, roles=[member]))
                 db.session.commit()
                 msg = "Hello,\n\nThank you for being an active participant at USIT's general meetings and voting in the Voting Challenge! Since you do not already have an account, we have created an account for you! We highly recommend that you visit vote.texasusit.org/reset to change your password to something more familiar. Below, we have inserted your new temporary password.\n\nEmail: {}\nPassword: {}\n\nThank you,\nUSIT Team".format(str(ws['A'+str(index)].value), password)
                 server.sendmail('votingchallenge@usiteam.org', str(ws['A'+str(index)].value).lower(), msg)
@@ -845,9 +846,9 @@ def addstockvote(email, choice):
             student = User.query.filter(func.lower(User.email) == func.lower(email)).first()
             add_stock(student, stock)
         else:
-            member = Role(name="Member", description="Just a general user to start off with")
+            member = Role(id = db.session.query(Role).count() + 1, name="Member", description="Just a general user to start off with")
             password = passwords.generate()
-            db.session.add(User(firstName="", lastName="",email=str(email), password=password, roles=[member]))
+            db.session.add(User(id = db.session.query(User).count() + 1, firstName="", lastName="",email=str(email), password=password, roles=[member]))
             db.session.commit()
             msg = "Hello,\n\nThank you for being an active participant at USIT's general meetings and voting in the Voting Challenge! Since you do not already have an account, we have created an account for you! We highly recommend that you visit vote.texasusit.org/reset to change your password to something more familiar. Below, we have inserted your new temporary password.\n\nEmail: {}\nPassword: {}\n\nThank you,\nUSIT Team".format(email, password)
             server.sendmail('votingchallenge@usiteam.org', str(email).lower(), msg)
@@ -879,7 +880,7 @@ def new_role(address, newrole):
         if Role.query.filter_by(name=newrole).first() != None:
             role = Role.query.filter_by(name=newrole).first()
         else:
-            role = Role(name=newrole, description="")
+            role = Role(id = db.session.query(Role).count() + 1, name=newrole, description="")
 
         if len(student.roles) > 0:
             student.roles[0] = role
