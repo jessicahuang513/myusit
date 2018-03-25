@@ -111,18 +111,33 @@ def get_json(ticker):
 
 def update_ret(self, stocks, transactions):
     ret = 0
-    totalStocks = 0
-    average_ret = 0
+    #totalStocks = 0
+    totalStockPrice = 0;
+    totalTransPrice  0;
 
+    # calculate sum of all starting prices for stocks to weight returns accordingly
+    for stock in stocks:
+        totalStockPrice += stock.startingPrice
+
+    # add weighted returns for each stock
     for stock in stocks:
         price = float(get_price(stock.ticker))
 
-        if (stock.short):
-            ret += (stock.startingPrice - price)/stock.startingPrice
-        else:
-            ret += (price - stock.startingPrice)/stock.startingPrice
+        weight = 1;
+        if totalStockPrice > 0:
+            weight = stock.startingPrice/totalStockPrice
 
-        totalStocks += 1
+        if (stock.short):
+            ret += weight*(stock.startingPrice - price)/stock.startingPrice
+        else:
+            ret += weight*(price - stock.startingPrice)/stock.startingPrice
+
+        #totalStocks += 1
+
+
+    # calculate sum of all starting prices for transactions to weight returns
+    for trans in transactions:
+        totalTransPrice += trans.startingPrice
 
     for trans in transactions:
         # if trans.returns == 0:
@@ -133,13 +148,17 @@ def update_ret(self, stocks, transactions):
 
         transTicker = Tickers.query.filter_by(ticker=trans.ticker).first()
 
+        weight = 1;
+        if totalTransPrice > 0:
+            weight = transTicker.startingPrice/totalTransPrice
+
         if not transTicker is None:
             if trans.returns == 0:
                 ret += 0
-                totalStocks += 1
+                #totalStocks += 1
             else:
-                ret += trans.returns / transTicker.startingPrice
-                totalStocks += 1
+                ret += weight*trans.returns / transTicker.startingPrice
+                #totalStocks += 1
             # if(transTicker.short):
             #     ret += (transTicker.startingPrice - trans.end_price)/transTicker.startingPrice
             # else:
@@ -149,12 +168,12 @@ def update_ret(self, stocks, transactions):
         else:
             ret += 0
 
-    if totalStocks != 0:
-        average_ret = ret/totalStocks
-    else:
-        average_ret = 0
+    # if totalStocks != 0:
+    #     average_ret = ret/totalStocks
+    # else:
+    #     average_ret = 0
 
-    db.session.query(User).filter_by(id=self.id).first().ret = average_ret
+    db.session.query(User).filter_by(id=self.id).first().ret = ret
     db.session.commit()
 
     return totalStocks
