@@ -468,6 +468,8 @@ def get_info(ticker):
     page = requests.get(urlStock)
     tree = html.fromstring(page.content)
 
+    print("HERE IS THE TICKER: " + ticker)
+
     print("HERE IS THE PRICE: " + tree.xpath('//div[@id="qwidget_lastsale"]/text()'))
     print("HERE IS THE CHANGE: " + tree.xpath('//div[@id="qwidget_netchange"]/text()'))
     print("HERE IS THE PCHANGE: " + tree.xpath('//div[@id="qwidget_percent"]/text()'))
