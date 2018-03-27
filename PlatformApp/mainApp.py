@@ -645,7 +645,7 @@ def exitPosition(exitIndex):
     else:
         exitReturn = exitPrice - exitPosition.startingPrice
 
-    transaction = Transactions(id = db.session.query(Transactions).count() + 1,
+    transaction = Transactions(id = db.session.query(Transactions).count() + 100,
                 user_id=current_user.id,
                 ticker=str(exitPosition.ticker),
                 date=today,
