@@ -23,6 +23,7 @@ from grampg import PasswordGenerator
 import ntpath
 import ssl
 from lxml import html
+from wallstreet import Stock, Call, Put
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -463,6 +464,8 @@ def get_info(ticker):
     # rjson = get_json(ticker)
     info = {}
 
+    s = Stock(ticker)
+
     # try:
     urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
     page = requests.get(urlStock)
@@ -473,12 +476,16 @@ def get_info(ticker):
     print("HERE IS THE PRICE: " + ",".join(tree.xpath('//div[@id="qwidget_lastsale"]/text()')))
     print("HERE IS THE CHANGE: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]/text()')))
     print("HERE IS THE PCHANGE: " + ",".join(tree.xpath('//div[@id="qwidget_percent"]/text()')))
-    print("HERE IS THE CHANGE CLASS: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]')))
+    # print("HERE IS THE CHANGE CLASS: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]')))
 
-    # price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
-    # change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
-    # pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
-    # change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
+    price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
+    change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
+    pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
+    change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
+
+    # price = s.price
+    # change = s.change
+    # pchange = s.cp
 
     # price = get_info_server(ticker)['price']
     # change = get_info_server(ticker)['gain']
@@ -495,6 +502,11 @@ def get_info(ticker):
         negative = False
     else:
         print("I guess it does not exist...")
+
+    # if change < 0:
+    #     negative = True
+    # elif change > 0:
+    #     negative = False
     
     # stock = Share(ticker)
 
