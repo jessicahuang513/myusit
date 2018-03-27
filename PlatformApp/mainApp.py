@@ -470,10 +470,10 @@ def get_info(ticker):
 
     print("HERE IS THE TICKER: " + ticker)
 
-    print("HERE IS THE PRICE: " + tree.xpath('//div[@id="qwidget_lastsale"]/text()'))
-    print("HERE IS THE CHANGE: " + tree.xpath('//div[@id="qwidget_netchange"]/text()'))
-    print("HERE IS THE PCHANGE: " + tree.xpath('//div[@id="qwidget_percent"]/text()'))
-    print("HERE IS THE CHANGE CLASS: " + tree.xpath('//div[@id="qwidget_netchange"]'))
+    print("HERE IS THE PRICE: " + ",".join(tree.xpath('//div[@id="qwidget_lastsale"]/text()')))
+    print("HERE IS THE CHANGE: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]/text()')))
+    print("HERE IS THE PCHANGE: " + ",".join(tree.xpath('//div[@id="qwidget_percent"]/text()')))
+    print("HERE IS THE CHANGE CLASS: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]')))
 
     # price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
     # change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
