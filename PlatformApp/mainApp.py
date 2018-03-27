@@ -577,8 +577,8 @@ def get_info(ticker):
     else:
         info['percentchange'] = pchange
 
-    if info['percentchange'] == None:
-        raise ValueError('Did not obtain a real value!')
+    # if info['percentchange'] == None:
+    #     raise ValueError('Did not obtain a real value!')
 
     # except:
     #     if db.session.query(Stock).filter_by(ticker = ticker).count() > 0:
