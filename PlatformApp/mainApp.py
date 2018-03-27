@@ -466,49 +466,48 @@ def get_info(ticker):
 
     # s = Stock(ticker)
 
-    # try:
-    urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
-    page = requests.get(urlStock)
-    tree = html.fromstring(page.content)
+    try:
+        urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
+        page = requests.get(urlStock)
+        tree = html.fromstring(page.content)
 
-    print("HERE IS THE TICKER: " + ticker)
+        price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
+        change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
+        pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
+        change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
 
-    print("HERE IS THE PRICE: " + ",".join(tree.xpath('//div[@id="qwidget_lastsale"]/text()')))
-    print("HERE IS THE CHANGE: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]/text()')))
-    print("HERE IS THE PCHANGE: " + ",".join(tree.xpath('//div[@id="qwidget_percent"]/text()')))
-    # print("HERE IS THE CHANGE CLASS: " + ",".join(tree.xpath('//div[@id="qwidget_netchange"]')))
+        # price = s.price
+        # change = s.change
+        # pchange = s.cp
 
-    price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
-    change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
-    pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
-    change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
+        # price = get_info_server(ticker)['price']
+        # change = get_info_server(ticker)['gain']
+        # pchange = get_info_server(ticker)['percentchange']
+        # change_class = 'qwidget-cents qwidget-Green'
 
-    # price = s.price
-    # change = s.change
-    # pchange = s.cp
+        print(str(price), str(change), str(pchange))
 
-    # price = get_info_server(ticker)['price']
-    # change = get_info_server(ticker)['gain']
-    # pchange = get_info_server(ticker)['percentchange']
-    # change_class = 'qwidget-cents qwidget-Green'
-
-    print(str(price), str(change), str(pchange))
-
-    negative = True
-
-    if change_class == 'qwidget-cents qwidget-Red':
         negative = True
-    elif change_class == 'qwidget-cents qwidget-Green':
-        negative = False
-    else:
-        print("I guess it does not exist...")
 
-    # if change < 0:
-    #     negative = True
-    # elif change > 0:
-    #     negative = False
-    
-    # stock = Share(ticker)
+        if change_class == 'qwidget-cents qwidget-Red':
+            negative = True
+        elif change_class == 'qwidget-cents qwidget-Green':
+            negative = False
+        else:
+            print("I guess it does not exist...")
+
+        # if change < 0:
+        #     negative = True
+        # elif change > 0:
+        #     negative = False
+        
+        # stock = Share(ticker)
+
+    except:
+        print("Had to reference the server!")
+        price = get_info_server(ticker)['price']
+        change = get_info_server(ticker)['gain']
+        pchange = get_info_server(ticker)['percentchange']
 
     # 0: Get name
     url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(ticker)
