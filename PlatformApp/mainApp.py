@@ -834,7 +834,7 @@ def addstockvote(email, choice):
             if Transactions.query.filter_by(user_id = student.id, ticker = symbol).first() == None:
                 t = datetime.now()
                 today = str(t.month) + "/" + str(t.day) + "/" + str(t.year)
-                transaction = Transactions(id = db.session.query(Transactions).count() + 1,
+                transaction = Transactions(id = db.session.query(Transactions).count() + 100,
                                            user_id=student.id,
                                            ticker=symbol,
                                            date=today,
