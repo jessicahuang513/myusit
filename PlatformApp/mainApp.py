@@ -464,7 +464,7 @@ def get_info(ticker):
     # rjson = get_json(ticker)
     info = {}
 
-    s = Stock(ticker)
+    # s = Stock(ticker)
 
     # try:
     urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
