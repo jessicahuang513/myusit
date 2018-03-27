@@ -508,6 +508,7 @@ def get_info(ticker):
         price = get_info_server(ticker)['price']
         change = get_info_server(ticker)['gain']
         pchange = get_info_server(ticker)['percentchange']
+        negative = True
 
     # 0: Get name
     url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(ticker)
