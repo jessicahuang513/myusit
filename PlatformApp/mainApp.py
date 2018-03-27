@@ -468,12 +468,15 @@ def get_info(ticker):
     page = requests.get(urlStock)
     tree = html.fromstring(page.content)
 
-    print(tree.xpath('//div[@id="qwidget_lastsale"]/text()'))
+    print("HERE IS THE PRICE: " + tree.xpath('//div[@id="qwidget_lastsale"]/text()'))
+    print("HERE IS THE CHANGE: " + tree.xpath('//div[@id="qwidget_netchange"]/text()'))
+    print("HERE IS THE PCHANGE: " + tree.xpath('//div[@id="qwidget_percent"]/text()'))
+    print("HERE IS THE CHANGE CLASS: " + tree.xpath('//div[@id="qwidget_netchange"]'))
 
     # price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
-    change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
-    pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
-    change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
+    # change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
+    # pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
+    # change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
 
     # price = get_info_server(ticker)['price']
     # change = get_info_server(ticker)['gain']
