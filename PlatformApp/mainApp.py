@@ -23,7 +23,7 @@ from grampg import PasswordGenerator
 import ntpath
 import ssl
 from lxml import html
-from wallstreet import Stock, Call, Put
+# from wallstreet import Stock, Call, Put
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
