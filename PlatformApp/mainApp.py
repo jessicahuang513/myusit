@@ -114,7 +114,7 @@ def get_json(ticker):
 
 def update_ret(self, stocks, transactions):
     ret = 0
-    #totalStocks = 0
+    totalStocks = 0
     totalStockPrice = 0
     totalTransPrice = 0
 
@@ -125,6 +125,7 @@ def update_ret(self, stocks, transactions):
     # add weighted returns for each stock
     for stock in stocks:
         price = float(get_price(stock.ticker))
+        totalStocks += 1
 
         weight = 1;
         if totalStockPrice > 0:
@@ -148,6 +149,7 @@ def update_ret(self, stocks, transactions):
         # else:
         #     ret += trans.returns
         #     totalStocks += 1
+        totalStocks += 1
 
         transTicker = Tickers.query.filter_by(ticker=trans.ticker).first()
 
