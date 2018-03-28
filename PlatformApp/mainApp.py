@@ -141,7 +141,9 @@ def update_ret(self, stocks, transactions):
 
     # calculate sum of all starting prices for transactions to weight returns
     for trans in transactions:
-        totalTransPrice += trans.startingPrice
+        if trans.returns != 0:
+            transTicker = Tickers.query.filter_by(ticker=trans.ticker).first()
+            totalTransPrice += transTicker.startingPrice
 
     for trans in transactions:
         # if trans.returns == 0:
