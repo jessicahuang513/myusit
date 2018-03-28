@@ -557,6 +557,7 @@ def get_info(ticker):
         if info['percentchange'] == None:
             raise ValueError('Did not obtain a real value!')
     except:
+        print("WENT TO THE EXCEPTION!")
         info = get_info_server(ticker)
 
     return info
