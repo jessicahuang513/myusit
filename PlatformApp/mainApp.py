@@ -23,7 +23,6 @@ from grampg import PasswordGenerator
 import ntpath
 import ssl
 from lxml import html
-# from wallstreet import Stock, Call, Put
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -465,25 +464,15 @@ def get_info(ticker):
     info = {}
 
     # s = Stock(ticker)
+    urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
+    page = requests.get(urlStock)
+    tree = html.fromstring(page.content)
 
-    try:
-        urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
-        page = requests.get(urlStock)
-        tree = html.fromstring(page.content)
-
+    if round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2) is not None:
         price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
         change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
         pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
         change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
-
-        # price = s.price
-        # change = s.change
-        # pchange = s.cp
-
-        # price = get_info_server(ticker)['price']
-        # change = get_info_server(ticker)['gain']
-        # pchange = get_info_server(ticker)['percentchange']
-        # change_class = 'qwidget-cents qwidget-Green'
 
         print(str(price), str(change), str(pchange))
 
@@ -496,104 +485,77 @@ def get_info(ticker):
         else:
             print("I guess it does not exist...")
 
-        # if change < 0:
-        #     negative = True
-        # elif change > 0:
-        #     negative = False
+        # 0: Get name
+        url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(ticker)
+        print("Ticker: ", ticker)
+        result = requests.get(url).json()
+
+        for x in result['ResultSet']['Result']:
+            if x['symbol'] == ticker:
+                info['name'] = truncate(x['name'])
+
+        if info['name'] == "" or info['name'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+
+        # 1: Get price
+        # info['price'] = float(rjson[0][u'l'])
+        # info['price'] = get_price(ticker)
+        info['price'] = price
+
+        if info['price'] == 0 or info['price'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+        # 2: Get datetime
+        # info['datetime'] = rjson[0][u'lt']
+        info['datetime'] = getdatetime(ticker)
+
+        if info['datetime'] == "" or info['datetime'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+        # 3: Get gain
+        # change = rjson[0][u'c']
+        # if change is None:
+        #     info['gain'] = 0
+        # c = change.split("+")
+        # if (len(c) > 1):
+        #     info['gain'] = float(c[1])
+        # info['gain'] = float(change)
+
+        if negative:
+            change = -1 * change
         
-        # stock = Share(ticker)
+        if change is None:
+            info['gain'] = 0
+        else:
+            info['gain'] = change
 
-    except:
-        print("Had to reference the server!")
-        price = get_info_server(ticker)['price']
-        change = get_info_server(ticker)['gain']
-        pchange = get_info_server(ticker)['percentchange']
-        negative = True
+        if info['gain'] == None:
+            raise ValueError('Did not obtain a real value!')
 
-    # 0: Get name
-    url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(ticker)
-    print("Ticker: ", ticker)
-    result = requests.get(url).json()
+            # 4: Get percent change
+            # info['percentchange'] = float(rjson[0][u'cp'])
+            # try:
+            #     percentChange = stock.get_percent_change()
+            #     percentChange = percentChange.split("%")[0]
+            #     if len(percentChange.split("+")) > 1:
+            #         percentChange = percentChange.split("+")[1]
+            #     elif len(percentChange.split("-")) > 1:
+            #         percentChange = percentChange.split("-")[1]
 
-    for x in result['ResultSet']['Result']:
-        if x['symbol'] == ticker:
-            info['name'] = truncate(x['name'])
+            #     info['percentchange'] = float(percentChange)
+            # except:
+            #     info['percentchange'] = stock.get_percent_change()
+        
+        if negative:
+            info['percentchange'] = -pchange
+        else:
+            info['percentchange'] = pchange
 
-    if info['name'] == "" or info['name'] == None:
-        raise ValueError('Did not obtain a real value!')
-
-
-    # 1: Get price
-    # info['price'] = float(rjson[0][u'l'])
-    # info['price'] = get_price(ticker)
-    info['price'] = price
-
-    if info['price'] == 0 or info['price'] == None:
-        raise ValueError('Did not obtain a real value!')
-
-    # 2: Get datetime
-    # info['datetime'] = rjson[0][u'lt']
-    info['datetime'] = getdatetime(ticker)
-
-    if info['datetime'] == "" or info['datetime'] == None:
-        raise ValueError('Did not obtain a real value!')
-
-    # 3: Get gain
-    # change = rjson[0][u'c']
-    # if change is None:
-    #     info['gain'] = 0
-    # c = change.split("+")
-    # if (len(c) > 1):
-    #     info['gain'] = float(c[1])
-    # info['gain'] = float(change)
-
-    if negative:
-        change = -1 * change
-    
-    if change is None:
-        info['gain'] = 0
+        if info['percentchange'] == None:
+            raise ValueError('Did not obtain a real value!')
     else:
-        info['gain'] = change
-
-    if info['gain'] == None:
-        raise ValueError('Did not obtain a real value!')
-
-        # 4: Get percent change
-        # info['percentchange'] = float(rjson[0][u'cp'])
-        # try:
-        #     percentChange = stock.get_percent_change()
-        #     percentChange = percentChange.split("%")[0]
-        #     if len(percentChange.split("+")) > 1:
-        #         percentChange = percentChange.split("+")[1]
-        #     elif len(percentChange.split("-")) > 1:
-        #         percentChange = percentChange.split("-")[1]
-
-        #     info['percentchange'] = float(percentChange)
-        # except:
-        #     info['percentchange'] = stock.get_percent_change()
-    
-    if negative:
-        info['percentchange'] = -pchange
-    else:
-        info['percentchange'] = pchange
-
-    # if info['percentchange'] == None:
-    #     raise ValueError('Did not obtain a real value!')
-
-    # except:
-    #     if db.session.query(Stock).filter_by(ticker = ticker).count() > 0:
-    #         found_stock = db.session.query(Stock).filter_by(ticker = ticker).first()
-    #         info['name'] = found_stock.name
-    #         info['price'] = found_stock.price
-    #         info['datetime'] = found_stock.datetime
-    #         info['gain'] = found_stock.change
-    #         info['percentchange'] = found_stock.percentChange
-    #     else:
-    #         info['name'] = "N/A"
-    #         info['price'] = 0.00
-    #         info['datetime'] = "N/A"
-    #         info['gain'] = 0.00
-    #         info['percentchange'] = 0.00
+        info = get_info_server(ticker)
 
     return info
 
