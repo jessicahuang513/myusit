@@ -405,7 +405,7 @@ def get_user_emails():
 @manager.command
 def add_analyst_group():
     email_input = str(raw_input("What is the GM's email? "))
-    student = User.query.filter_by(email.lower() = email_input.lower()).first()
+    student = User.query.filter(func.lower(email) = func.lower(email_input)).first()
     if student is not None:
         analyst_group = str(raw_input("Please list the senior analyst for {}: ".format(student.email)))
         student.analyst = analyst_group
