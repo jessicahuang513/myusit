@@ -411,8 +411,8 @@ def add_analyst_group():
         student.analyst = analyst_group
         db.session.commit()
 
-    student_new = User.query.filter_by(email = email_input).first()
-    print(student.analyst + " is {}'s SA.".format(student.email))
+        student_new = User.query.filter_by(email = email_input).first()
+        print(student.analyst + " is {}'s SA.".format(student.email))
 
 @manager.command
 def add_fund():
