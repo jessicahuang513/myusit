@@ -407,8 +407,7 @@ def add_analyst_group():
     email_input = str(raw_input("What is the GM's email? "))
     student = User.query.filter_by(email = email_input).first()
     if student is not None:
-        fullName = student.firstName + " " + student.lastName
-        analyst_group = str(raw_input("Please list the senior analyst for {}: ".format(fullName)))
+        analyst_group = str(raw_input("Please list the senior analyst for {}: ".format(student.email)))
         student.analyst = analyst_group
         db.session.commit()
 
