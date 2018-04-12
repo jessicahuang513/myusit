@@ -412,8 +412,7 @@ def add_analyst_group():
         db.session.commit()
 
     student_new = User.query.filter_by(email = email_input).first()
-    fullName = student.firstName + " " + student.lastName
-    print(student.analyst + " is {}'s SA.".format(fullName))
+    print(student.analyst + " is {}'s SA.".format(student.email))
 
 @manager.command
 def add_fund():
