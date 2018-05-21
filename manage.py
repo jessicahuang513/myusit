@@ -25,7 +25,7 @@ manager = Manager(app)
 def initdb():
     db.create_all()
     admin = Role(name="Admin", description="Gets to look at all the rankings.")
-    db.session.add(User(firstName="Arnav", lastName="Jain",email="arnav_jain@utexas.edu", eid="aj24872", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
+    #db.session.add(User(firstName="Arnav", lastName="Jain",email="arnav_jain@utexas.edu", eid="aj24872", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
     db.session.add(User(firstName="Catherine", lastName="Cheng",email="president@usiteam.org", eid="1111111", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
     db.session.add(User(firstName="Eric", lastName="Sun",email="vicepresident@usiteam.org", eid="2222222", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
     db.session.add(User(firstName="Matt", lastName="Hopp",email="investment@usiteam.org", eid="3333333", password="test11", roles=[admin], attendance = 0, dues = 0, atLatestMeeting = False, rowOnSheet = 0, analyst = 'Srija Nalla', fund='TMT'))
