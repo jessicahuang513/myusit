@@ -702,8 +702,9 @@ def upload_file():
         addstock(f.filename, request.form['ticker'], float(request.form['price']))
         return redirect('dashboard')
 
-def openfile(name):
+def openfile():
     try: 
+        name = str(raw_input("File path: "))
         wb = load_workbook(filename = name)
         ws = wb.active
         print('file ' + name + ' uploaded ')
@@ -711,7 +712,6 @@ def openfile(name):
         print('file not uploaded')
 
 def addstock(name, symbol, price):
-
     wb = load_workbook(filename='~/Downloads/' + name)
     ws = wb.active
 
