@@ -66,7 +66,8 @@ def get_info_server(ticker):
     return info    
 
 @manager.command
-def get_price(ticker):
+def get_price():
+    ticker = str(raw_input("Ticker: "))
     urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
     page = requests.get(urlStock)
     tree = html.fromstring(page.content)
@@ -77,8 +78,11 @@ def get_price(ticker):
             price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
         else:
             price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0]), 2)
+
+        print('Price: ' + price)
     else:
         price = 0
+        print('price not found')
     return price
 
 @manager.command
