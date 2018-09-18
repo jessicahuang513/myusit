@@ -45,6 +45,110 @@ def openfile():
         print('file not uploaded')
 
 @manager.command
+def get_info():
+    ticker = str(raw_input("Ticker: "))
+    # rjson = get_json(ticker)
+    info = {}
+
+    # s = Stock(ticker)
+    urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
+    page = requests.get(urlStock)
+    tree = html.fromstring(page.content)
+
+    try:
+        price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
+        print(price)
+        change = round(float(tree.xpath('//div[@id="qwidget_netchange"]/text()')[0]), 2)
+        pchange = round(float(tree.xpath('//div[@id="qwidget_percent"]/text()')[0].split("%")[0]), 2)
+        change_class = tree.xpath('//div[@id="qwidget_netchange"]')[0].get('class')
+
+        print(str(price), str(change), str(pchange))
+
+        negative = True
+
+        if change_class == 'qwidget-cents qwidget-Red':
+            negative = True
+        elif change_class == 'qwidget-cents qwidget-Green':
+            negative = False
+        else:
+            print("I guess it does not exist...")
+
+        # 0: Get name
+        url = "http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en".format(ticker)
+        print("Ticker: ", ticker)
+        result = requests.get(url).json()
+
+        for x in result['ResultSet']['Result']:
+            if x['symbol'] == ticker:
+                info['name'] = truncate(x['name'])
+
+        if info['name'] == "" or info['name'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+
+        # 1: Get price
+        # info['price'] = float(rjson[0][u'l'])
+        # info['price'] = get_price(ticker)
+        info['price'] = price
+
+        if info['price'] == 0 or info['price'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+        # 2: Get datetime
+        # info['datetime'] = rjson[0][u'lt']
+        info['datetime'] = getdatetime(ticker)
+
+        if info['datetime'] == "" or info['datetime'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+        # 3: Get gain
+        # change = rjson[0][u'c']
+        # if change is None:
+        #     info['gain'] = 0
+        # c = change.split("+")
+        # if (len(c) > 1):
+        #     info['gain'] = float(c[1])
+        # info['gain'] = float(change)
+
+        if negative:
+            change = -1 * change
+        
+        if change is None:
+            info['gain'] = 0
+        else:
+            info['gain'] = change
+
+        if info['gain'] == None:
+            raise ValueError('Did not obtain a real value!')
+
+            # 4: Get percent change
+            # info['percentchange'] = float(rjson[0][u'cp'])
+            # try:
+            #     percentChange = stock.get_percent_change()
+            #     percentChange = percentChange.split("%")[0]
+            #     if len(percentChange.split("+")) > 1:
+            #         percentChange = percentChange.split("+")[1]
+            #     elif len(percentChange.split("-")) > 1:
+            #         percentChange = percentChange.split("-")[1]
+
+            #     info['percentchange'] = float(percentChange)
+            # except:
+            #     info['percentchange'] = stock.get_percent_change()
+        
+        if negative:
+            info['percentchange'] = -pchange
+        else:
+            info['percentchange'] = pchange
+
+        if info['percentchange'] == None:
+            raise ValueError('Did not obtain a real value!')
+    except:
+        print("WENT TO THE EXCEPTION!")
+        info = get_info_server(ticker)
+
+    return info
+
+@manager.command
 def get_ag_materials():
     dev_token = str(raw_input("Developer token: "))
 
