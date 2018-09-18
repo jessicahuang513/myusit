@@ -6,4 +6,3 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', s
 client = gspread.authorize(creds)
 
 sheet = client.open("Membership Sign-in").get_worksheet(0)
-sheet2 = client.open("Voting Challenge Results").get_worksheet(0)
