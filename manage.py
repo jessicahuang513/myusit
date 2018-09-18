@@ -45,6 +45,26 @@ def openfile():
     except:
         print('file not uploaded')
 
+def get_info_server(ticker):
+
+    info = {}
+
+    if db.session.query(Stock).filter_by(ticker = ticker).count() > 0:
+        found_stock = db.session.query(Stock).filter_by(ticker = ticker).first()
+        info['name'] = found_stock.name
+        info['price'] = found_stock.price
+        info['datetime'] = found_stock.datetime
+        info['gain'] = found_stock.change
+        info['percentchange'] = found_stock.percentChange
+    else:
+        info['name'] = "N/A"
+        info['price'] = 0.00
+        info['datetime'] = "N/A"
+        info['gain'] = 0.00
+        info['percentchange'] = 0.00
+
+    return info    
+
 @manager.command
 def get_info():
     ticker = str(raw_input("Ticker: "))
