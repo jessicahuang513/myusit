@@ -35,6 +35,16 @@ def initdb():
     print('Initialized the database')
 
 @manager.command
+def openfile():
+    try: 
+        name = str(raw_input("File path: "))
+        wb = load_workbook(filename = name)
+        ws = wb.active
+        print('file ' + name + ' uploaded ')
+    except:
+        print('file not uploaded')
+
+@manager.command
 def get_ag_materials():
     dev_token = str(raw_input("Developer token: "))
 
