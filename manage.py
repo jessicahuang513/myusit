@@ -12,6 +12,7 @@ from boxsdk import Client
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Float, insert
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
+from lxml import html
 # from votingchallenge import votesession, get_users_from_vote
 # from signin import signsession
 
