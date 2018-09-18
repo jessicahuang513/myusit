@@ -703,7 +703,8 @@ def upload_file():
         return redirect('dashboard')
 
 def addstock(name, symbol, price):
-    wb = load_workbook(filename=name)
+
+    wb = load_workbook(filename='~/Downloads/' + name)
     ws = wb.active
 
     index = 1
