@@ -24,6 +24,11 @@ import ntpath
 import ssl
 from lxml import html
 
+SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+
+os.environ['DATABASE_URL'] = <URL>
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:

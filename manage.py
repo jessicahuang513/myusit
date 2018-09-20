@@ -13,6 +13,9 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean, Float, i
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
 from lxml import html
+from pandas_datareader import data
+import pandas as pd
+
 # from votingchallenge import votesession, get_users_from_vote
 # from signin import signsession
 
@@ -65,25 +68,15 @@ def get_info_server(ticker):
 
     return info    
 
+
 @manager.command
 def get_price():
     ticker = str(raw_input("Ticker: "))
-    urlStock = "http://www.nasdaq.com/symbol/{}".format(ticker)
-    page = requests.get(urlStock)
-    tree = html.fromstring(page.content)
-
-    #print("Price: " + tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0])
-    if len(tree.xpath('//div[@id="qwidget_lastsale"]/text()')) > 0: 
-        if len(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")) > 1:
-            price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0].split("$")[1]), 2)
-        else:
-            price = round(float(tree.xpath('//div[@id="qwidget_lastsale"]/text()')[0]), 2)
-
-        print('Price: ' + price)
+    
     else:
         price = 0
         print('price not found')
-    return price
+    #return price
 
 @manager.command
 def get_info():
