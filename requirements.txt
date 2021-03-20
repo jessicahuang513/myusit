@@ -10,7 +10,7 @@ openpyxl==2.4.7
 requests==2.16.0
 yahoo-finance==1.4.0
 gunicorn==19.7.1
-Jinja2==2.8.1
+Jinja2==2.11.3
 python-dateutil==1.5
 pytz==2013.7
 SQLAlchemy==1.1.4
