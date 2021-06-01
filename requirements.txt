@@ -22,6 +22,6 @@ gspread==0.6.2
 oauth2client==4.1.2
 pytz==2013.7
 simplejson==3.10.0
-urllib3==1.21.1
+urllib3==1.26.5
 google-api-python-client==1.6.4
 boxsdk==1.5.5
